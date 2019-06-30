@@ -2,8 +2,11 @@
 <resources>
     <color name="primary">#E43F3F</color>
     <color name="primary_dark">#E12929</color>
-    <color name="primary_darker">#CC1D1D</color>
+    <color name="primary_darker">#C91717</color>
     <color name="accent">#FFFFFF</color>
+
+    <color name="facebook">#3B5998</color>
+    <color name="google">#FFAA00</color>
 
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
