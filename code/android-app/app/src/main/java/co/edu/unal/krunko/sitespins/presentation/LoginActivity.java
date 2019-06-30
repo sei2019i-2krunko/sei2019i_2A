@@ -2,10 +2,11 @@ package co.edu.unal.krunko.sitespins.presentation;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
 import co.edu.unal.krunko.sitespins.R;
 
-@SuppressLint("Registered")
 public class LoginActivity extends AppCompatActivity {
 
     @Override
