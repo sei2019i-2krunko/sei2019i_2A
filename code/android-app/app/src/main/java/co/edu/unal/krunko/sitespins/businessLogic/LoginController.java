@@ -15,16 +15,17 @@ public class LoginController {
 
                 if (true/*existe el ususario*/){
                     if(true/*si coicide la contraseña*/){
-                        return "Successful Connection";
+
+                        return "Ingreso Exitoso";
                     }
-                    return "Incorrect Password";
+                    return "Contraseña incorrecta";
                 }
-                return "User Doesn't Exist";
+                return "El e-mail no está registrado";
             }else{
-                return "Enter Password";
+                return "Ingrese contraseña";
             }
         }else{
-            return "Enter Personal ID";
+            return "Ingrese e-mail";
         }
     }
 
