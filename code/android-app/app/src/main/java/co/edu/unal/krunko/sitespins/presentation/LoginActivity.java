@@ -9,7 +9,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.sql.SQLOutput;
+
 import co.edu.unal.krunko.sitespins.R;
+import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,8 +47,48 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        _loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Login
+                LocalLogin(_emailText.getText().toString(),_passwordText.getText().toString());
+            }
+        });
+
         // TODO: Completar el Activity <:
 
     }
 
+    private LoginController loginController;
+    //public static User logedUser;
+
+    private void LocalLogin(String email, String password){
+        loginController = new LoginController();
+
+        String msg = loginController.isAuthenticated(email, password);
+
+        if(msg.equalsIgnoreCase("Ingreso Exitoso")){
+            //logedUser = loginController.getUser();
+            goToMainActivity();
+
+        }else if(msg.equalsIgnoreCase("Ingrese e-mail")){
+            _emailText.setError(msg);
+
+        }else if(msg.equalsIgnoreCase("Ingrese contraseña")){
+            _passwordText.setError(msg);
+
+        }else if(msg.equalsIgnoreCase("El e-mail no está registrado")){
+            _emailText.setError(msg);
+
+        }else if(msg.equalsIgnoreCase("Contraseña incorrecta")){
+            _passwordText.setError(msg);
+        }else{
+            System.out.println("Error en Login Actiyvity -> Local Login");
+        }
+    }
+
+    private void goToMainActivity(){
+        Intent mainAct = new Intent (getApplicationContext(), MainActivity.class);
+        startActivity(mainAct);
+    }
 }
