@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         String msg = loginController.isAuthenticated(email, password);
 
         if(msg.equalsIgnoreCase("Ingreso Exitoso")){
-            //logedUser = login.getUser();
+            //logedUser = loginController.getUser();
             goToMainActivity();
 
         }else if(msg.equalsIgnoreCase("Ingrese e-mail")){

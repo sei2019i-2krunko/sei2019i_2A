@@ -3,6 +3,7 @@ package co.edu.unal.krunko.sitespins.businessLogic;
 public class LoginController {
 
     //User usuario;
+    //getUser(){return repositorio.user;}
     //Instancia de lo que maneja firebase
 
     public String isAuthenticated(String personal_id, String password){
