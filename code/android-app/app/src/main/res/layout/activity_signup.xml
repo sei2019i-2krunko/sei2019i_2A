@@ -31,13 +31,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="Nombre"
-            />
+                android:hint="@string/nombre"
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -47,13 +47,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email"
-            />
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -63,13 +63,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Contraseña"
-            />
+                android:hint="@string/contraseña"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -79,13 +79,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_reEnterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Confirmar contraseña"
-            />
+                android:hint="@string/confirmar_contraseña"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -95,20 +95,20 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:onClick="@string/crear_cuenta"
             android:padding="12dp"
-            android:text="Crear cuenta"
-        />
+            android:text="Crear cuenta" />
 
-        <TextView android:id="@+id/link_login"
+        <TextView
+            android:id="@+id/link_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="24dp"
-            android:textStyle="bold"
-            android:text="Ya tienes una cuenta? Ingresa aquí"
             android:gravity="center"
+            android:text="@string/regresar_a_login"
             android:textSize="16dip"
-        />
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>
