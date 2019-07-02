@@ -7,6 +7,7 @@ public class User {
 	private String photoUrl;
 	private String email;
 	private String providerId;
+	private boolean admin;
 
 	public User(String uid, String displayName, String photoUrl, String email, String providerId) {
 		this.uid = uid;
@@ -14,6 +15,16 @@ public class User {
 		this.photoUrl = photoUrl;
 		this.email = email;
 		this.providerId = providerId;
+		this.admin = false;
+	}
+
+	public User(String uid, String displayName, String photoUrl, String email, String providerId, boolean admin) {
+		this.uid = uid;
+		this.displayName = displayName;
+		this.photoUrl = photoUrl;
+		this.email = email;
+		this.providerId = providerId;
+		this.admin = admin;
 	}
 
 	public String getUid() {
@@ -54,5 +65,13 @@ public class User {
 
 	public void setProviderId(String providerId) {
 		this.providerId = providerId;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 }
