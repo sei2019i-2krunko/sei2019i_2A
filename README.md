@@ -1,4 +1,4 @@
-![Sites & Pins](https://i.imgur.com/VMJuIL5.png)
+![Sites & Pins](https://i.imgur.com/VMJuIL5.png?5)
 
 ### **Software Engineer I** - 2019 I
 
