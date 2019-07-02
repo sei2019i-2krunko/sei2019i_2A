@@ -1,4 +1,4 @@
-# ![Sites & Pins (Android App)](https://imgur.com/VMJuIL5)
+![Sites & Pins (Android App)](https://imgur.com/VMJuIL5)
 
 ### **Software Engineer I** - 2019 I
 
