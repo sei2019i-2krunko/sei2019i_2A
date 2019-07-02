@@ -1,15 +1,19 @@
 package co.edu.unal.krunko.sitespins.dataAccess.models;
 
+import android.net.Uri;
+
+import com.google.firebase.auth.FirebaseUser;
+
 public class User {
 
 	private String uid;
 	private String displayName;
-	private String photoUrl;
+	private Uri photoUrl;
 	private String email;
 	private String providerId;
 	private boolean admin;
 
-	public User(String uid, String displayName, String photoUrl, String email, String providerId) {
+	public User(String uid, String displayName, Uri photoUrl, String email, String providerId) {
 		this.uid = uid;
 		this.displayName = displayName;
 		this.photoUrl = photoUrl;
@@ -18,7 +22,7 @@ public class User {
 		this.admin = false;
 	}
 
-	public User(String uid, String displayName, String photoUrl, String email, String providerId, boolean admin) {
+	public User(String uid, String displayName, Uri photoUrl, String email, String providerId, boolean admin) {
 		this.uid = uid;
 		this.displayName = displayName;
 		this.photoUrl = photoUrl;
@@ -43,11 +47,11 @@ public class User {
 		this.displayName = displayName;
 	}
 
-	public String getPhotoUrl() {
+	public Uri getPhotoUrl() {
 		return photoUrl;
 	}
 
-	public void setPhotoUrl(String photoUrl) {
+	public void setPhotoUrl(Uri photoUrl) {
 		this.photoUrl = photoUrl;
 	}
 
@@ -73,5 +77,15 @@ public class User {
 
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+
+	public static User fromFirebaseUser(FirebaseUser firebaseUser) {
+		return firebaseUser == null ? null : new User(
+				firebaseUser.getUid(),
+				firebaseUser.getDisplayName(),
+				firebaseUser.getPhotoUrl(),
+				firebaseUser.getEmail(),
+				firebaseUser.getProviderId()
+		);
 	}
 }
