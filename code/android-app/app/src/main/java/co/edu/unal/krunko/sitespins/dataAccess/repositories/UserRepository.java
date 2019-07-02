@@ -14,31 +14,36 @@ import co.edu.unal.krunko.sitespins.dataAccess.models.User;
 
 public class UserRepository {
 
-    private FirebaseAuth auth;
-    private User user;
+	private FirebaseAuth auth;
+	private User user;
 
-    public UserRepository() {
-        this.auth = FirebaseAuth.getInstance();
-    }
+	public UserRepository() {
+		this.auth = FirebaseAuth.getInstance();
+		this.user = User.fromFirebaseUser(this.auth.getCurrentUser());
+	}
 
-    //TODO: implement the creation of the user with email and password
-    public User createUserWithEmailAndPassword(String _email, String _password) throws Exception {
-        final Exception[] exception = {null};
-        auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    user = User.fromFirebaseUser(auth.getCurrentUser());
-                } else {
-                    user = null;
-                    exception[0] = task.getException();
-                }
-            }
-        });
+	public User getUser() {
+		return this.user;
+	}
 
-        if (exception[0] == null) {
-            throw exception[0];
-        }
-        return user;
-    }
+
+	public User createUserWithEmailAndPassword(String _email, String _password) throws Exception {
+		final Exception[] exception = {null};
+		auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+			@Override
+			public void onComplete(@NonNull Task<AuthResult> task) {
+				if (task.isSuccessful()) {
+					user = User.fromFirebaseUser(auth.getCurrentUser());
+				} else {
+					user = null;
+					exception[0] = task.getException();
+				}
+			}
+		});
+
+		if (exception[0] == null) {
+			throw exception[0];
+		}
+		return user;
+	}
 }

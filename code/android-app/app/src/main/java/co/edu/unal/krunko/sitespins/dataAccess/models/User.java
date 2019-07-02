@@ -80,10 +80,7 @@ public class User {
 	}
 
 	public static User fromFirebaseUser(FirebaseUser firebaseUser) {
-		if (firebaseUser == null) {
-			throw new NullPointerException("Invalid FirebaseUser");
-		}
-		return new User(
+		return firebaseUser == null ? null : new User(
 				firebaseUser.getUid(),
 				firebaseUser.getDisplayName(),
 				firebaseUser.getPhotoUrl(),
