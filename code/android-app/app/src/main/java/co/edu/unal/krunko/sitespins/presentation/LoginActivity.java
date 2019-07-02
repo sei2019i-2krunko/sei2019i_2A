@@ -1,6 +1,5 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.sql.SQLOutput;
 
 import co.edu.unal.krunko.sitespins.R;
 import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
@@ -73,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     private void LocalLogin(String email, String password){
         loginController = new LoginController();
 
-        String msg = loginController.isAuthenticated(email, password);
+        String msg = loginController.loginWithEmailAndPassword(email, password);
 
         if(msg.equalsIgnoreCase("Ingreso Exitoso")){
             //logedUser = loginController.getUser();

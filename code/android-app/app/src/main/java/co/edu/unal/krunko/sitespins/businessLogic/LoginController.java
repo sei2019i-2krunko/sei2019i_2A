@@ -6,11 +6,9 @@ public class LoginController {
     //getUser(){return repositorio.user;}
     //Instancia de lo que maneja firebase
 
-    public String isAuthenticated(String personal_id, String password){
-        if(!personal_id.isEmpty()){
-            if(!password.isEmpty()){
-                int id = Integer.parseInt(personal_id);
-                int pass = Integer.parseInt(password);
+    public String loginWithEmailAndPassword(String email, String password){
+        if(email != null && !email.isEmpty()){
+            if(password != null && !password.isEmpty()){
 
                 //usuario = Obtener el usuario con id haciendo uso de la instacia de firebase
 
