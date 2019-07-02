@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".presentation.MainActivity" />
         <activity android:name=".presentation.SignupActivity" />
+        <activity android:name=".presentation.MapsActivity"/>
     </application>
 
 </manifest>
