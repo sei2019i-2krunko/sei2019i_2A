@@ -21,7 +21,10 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText _emailText;
     EditText _passwordText;
+
     Button _loginButton;
+    Button _anonimoButton;
+
     TextView _signupLink;
 
     @Override
@@ -29,17 +32,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-         // Inicialización de Botones y Campos de Texto (desde Layout)
-            _emailText = findViewById(R.id.input_email);
-            _passwordText = findViewById(R.id.input_password);
-            _loginButton = findViewById(R.id.btn_login);
-            _signupLink = findViewById(R.id.link_signup);
+        initViews();
 
         _signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-            // Iniciar el Activity de Sign-Up
+                // Iniciar el Activity de Sign-Up
                 Intent goSignup = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivityForResult(goSignup, REQUEST_SIGNUP);
                 finish();
@@ -55,9 +54,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        _anonimoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMapsActivity();
+
+            }
+        });
+
         // TODO: Completar el Activity <:
 
     }
+
 
     private LoginController loginController;
     //public static User logedUser;
@@ -90,5 +98,21 @@ public class LoginActivity extends AppCompatActivity {
     private void goToMainActivity(){
         Intent mainAct = new Intent (getApplicationContext(), MainActivity.class);
         startActivity(mainAct);
+    }
+    private void goToMapsActivity(){
+        Intent mapsAct = new Intent (getApplicationContext(), MapsActivity.class);
+        startActivity(mapsAct);
+    }
+
+    private void initViews(){
+
+        // Inicialización de Botones y Campos de Texto (desde Layout)
+        _emailText = findViewById(R.id.input_email);
+        _passwordText = findViewById(R.id.input_password);
+
+        _loginButton = findViewById(R.id.btn_login);
+        _anonimoButton= findViewById(R.id.btn_login_A);
+
+        _signupLink = findViewById(R.id.link_signup);
     }
 }
