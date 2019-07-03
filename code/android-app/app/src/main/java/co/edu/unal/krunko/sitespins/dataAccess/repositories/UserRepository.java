@@ -1,5 +1,7 @@
 package co.edu.unal.krunko.sitespins.dataAccess.repositories;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,29 @@ public class UserRepository {
 		return this.user;
 	}
 
+	public User getUserByEmailAndPassword(String email, String password) throws Exception {
+		final Exception[] exception = {null};
+
+		this.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+			@Override
+			public void onComplete(@NonNull Task<AuthResult> task) {
+				if (task.isSuccessful()) {
+					user = User.fromFirebaseUser(auth.getCurrentUser());
+					Log.d("EmailPassword", "signInWithEmail:success");
+				} else {
+					user = null;
+					exception[0] = task.getException();
+					Log.w("EmailPassword", "signInWithEmail:failure", task.getException());
+				}
+			}
+		});
+
+		if (exception[0] != null) {
+			throw exception[0];
+		}
+		return null;
+	}
+
 
 	public User createUserWithEmailAndPassword(String _email, String _password) throws Exception {
 		final Exception[] exception = {null};
@@ -34,9 +59,11 @@ public class UserRepository {
 			public void onComplete(@NonNull Task<AuthResult> task) {
 				if (task.isSuccessful()) {
 					user = User.fromFirebaseUser(auth.getCurrentUser());
+					Log.d("EmailPassword", "signUpWithEmail:success");
 				} else {
 					user = null;
 					exception[0] = task.getException();
+					Log.w("EmailPassword", "signUpWithEmail:failure", task.getException());
 				}
 			}
 		});
