@@ -41,7 +41,7 @@ public class UserRepository {
 			}
 		});
 
-		if (exception[0] == null) {
+		if (exception[0] != null) {
 			throw exception[0];
 		}
 		return user;
