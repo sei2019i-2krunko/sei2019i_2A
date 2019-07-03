@@ -14,9 +14,7 @@
 
     <string name="crear_cuenta">Crear cuenta</string>
     <string name="regresar_a_login">¿Ya tienes una cuenta? Ingresa aquí</string>
-
-
-
+    <string name="title_activity_maps2">Map</string>
 
 
 </resources>
