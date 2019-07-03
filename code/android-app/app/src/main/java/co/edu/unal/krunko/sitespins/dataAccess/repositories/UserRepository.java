@@ -8,7 +8,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import co.edu.unal.krunko.sitespins.dataAccess.models.User;
@@ -25,6 +27,36 @@ public class UserRepository {
 	}
 
 	public User getUser() {
+		return this.user;
+	}
+
+	public User updateCurrentUserName(String displayName) throws Exception {
+		final Exception[] exception = {null};
+
+		if (user == null) {
+			return null;
+		}
+
+		Objects.requireNonNull(this.auth.getCurrentUser()).updateProfile(
+				new UserProfileChangeRequest.Builder().setDisplayName(displayName).build()
+		).addOnCompleteListener((Executor) this, new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task) {
+				if (task.isSuccessful()) {
+					Log.d("UserUpdate", "UsernameUpdate:success");
+				} else {
+					user = null;
+					exception[0] = task.getException();
+					Log.w("UserUpdate", "UsernameUpdate:failure", task.getException());
+				}
+			}
+		});
+
+		if (exception[0] != null) {
+			throw exception[0];
+		}
+
+		this.user = User.fromFirebaseUser(auth.getCurrentUser());
 		return this.user;
 	}
 
