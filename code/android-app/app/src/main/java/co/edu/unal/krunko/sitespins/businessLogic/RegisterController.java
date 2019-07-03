@@ -7,9 +7,10 @@ public class RegisterController {
 	public enum RegisterStatus {
 		INVALID_NAME,
 		INVALID_EMAIL,
+		NAME_NOT_UPDATED,
 		INVALID_PASSWORD,
-		REGISTER_UNSUCCESSFUL,
-		REGISTER_SUCCESSFUL
+		REGISTER_SUCCESSFUL,
+		REGISTER_UNSUCCESSFUL
 	}
 
 	public static RegisterStatus registerWithEmailAndPassword(String name, String email, String password) {
@@ -30,7 +31,12 @@ public class RegisterController {
 			return RegisterStatus.REGISTER_UNSUCCESSFUL;
 		}
 
-		// TODO: change the user's name
+		try {
+			userRepository.updateCurrentUserName(name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RegisterStatus.NAME_NOT_UPDATED;
+		}
 
 		return RegisterStatus.REGISTER_SUCCESSFUL;
 	}
