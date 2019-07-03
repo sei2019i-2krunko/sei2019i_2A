@@ -10,7 +10,7 @@ public class LoginController {
 		 * <p>
 		 * WRONG CREDENTIALS: the email or the password are/is invalid.
 		 * SUCCESSFUL_LOGIN: the user logging in was successful.
-		 * EMAIL_IS_REQUIRED: if the user has enter an invalid email.
+		 * EMAIL_IS_REQUIRED_OR_INVALID: if the user has enter an invalid email.
 		 * PASSWORD_IS_REQUIRED: if the password has a length lower than 6 characters.
 		 */
 		WRONG_CREDENTIALS,
@@ -23,14 +23,14 @@ public class LoginController {
 		if (email == null
 				|| !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$")) {
 			return LoginStatus.EMAIL_IS_REQUIRED_OR_INVALID;
-		} else if (password == null || password.isEmpty() || password.length() < 8) {
+		} else if (password == null || password.length() < 8) {
 			return LoginStatus.PASSWORD_IS_REQUIRED;
 		}
 
 		UserRepository userRepository = new UserRepository();
 
 		try {
-			//TODO: implement in user repository (login with email and password)
+			userRepository.getUserByEmailAndPassword(email, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return LoginStatus.WRONG_CREDENTIALS;
