@@ -1,6 +1,5 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.sql.SQLOutput;
 
 import co.edu.unal.krunko.sitespins.R;
 import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
@@ -21,7 +18,10 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText _emailText;
     EditText _passwordText;
+
     Button _loginButton;
+    Button _anonimoButton;
+
     TextView _signupLink;
 
     @Override
@@ -29,17 +29,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-         // Inicialización de Botones y Campos de Texto (desde Layout)
-            _emailText = findViewById(R.id.input_email);
-            _passwordText = findViewById(R.id.input_password);
-            _loginButton = findViewById(R.id.btn_login);
-            _signupLink = findViewById(R.id.link_signup);
+        initViews();
 
         _signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-            // Iniciar el Activity de Sign-Up
+                // Iniciar el Activity de Sign-Up
                 Intent goSignup = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivityForResult(goSignup, REQUEST_SIGNUP);
                 finish();
@@ -55,9 +51,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        _anonimoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMapsActivity();
+
+            }
+        });
+
         // TODO: Completar el Activity <:
 
     }
+
 
     private LoginController loginController;
     //public static User logedUser;
@@ -65,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     private void LocalLogin(String email, String password){
         loginController = new LoginController();
 
-        String msg = loginController.isAuthenticated(email, password);
+        String msg = loginController.loginWithEmailAndPassword(email, password);
 
         if(msg.equalsIgnoreCase("Ingreso Exitoso")){
             //logedUser = loginController.getUser();
@@ -90,5 +95,21 @@ public class LoginActivity extends AppCompatActivity {
     private void goToMainActivity(){
         Intent mainAct = new Intent (getApplicationContext(), MainActivity.class);
         startActivity(mainAct);
+    }
+    private void goToMapsActivity(){
+        Intent mapsAct = new Intent (getApplicationContext(), MapsActivity.class);
+        startActivity(mapsAct);
+    }
+
+    private void initViews(){
+
+        // Inicialización de Botones y Campos de Texto (desde Layout)
+        _emailText = findViewById(R.id.input_email);
+        _passwordText = findViewById(R.id.input_password);
+
+        _loginButton = findViewById(R.id.btn_login);
+        _anonimoButton= findViewById(R.id.btn_login_A);
+
+        _signupLink = findViewById(R.id.link_signup);
     }
 }
