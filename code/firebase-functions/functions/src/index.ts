@@ -22,6 +22,7 @@ exports.create_user_document = functions.auth.user().onCreate((user, context) =>
 
 		const default_data = {
 			uid: user.uid,
+			admin: false
 		}
 
 		return docRef.set(default_data).catch((error) => {
