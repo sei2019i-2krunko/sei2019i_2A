@@ -1,8 +1,20 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
+import android.app.Activity;
+
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
+
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
 public class RegisterController {
+
+	private Activity activity;
+
+	public RegisterController(Activity activity) {
+		this.activity = activity;
+	}
 
 	public enum RegisterStatus {
 		INVALID_NAME,
@@ -13,7 +25,7 @@ public class RegisterController {
 		REGISTER_UNSUCCESSFUL
 	}
 
-	public static RegisterStatus registerWithEmailAndPassword(String name, String email, String password) {
+	public RegisterStatus registerWithEmailAndPassword(String name, String email, String password) {
 		if (name == null || name.isEmpty()) {
 			return RegisterStatus.INVALID_NAME;
 		} else if (email == null || !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$")) {
@@ -22,22 +34,16 @@ public class RegisterController {
 			return RegisterStatus.INVALID_PASSWORD;
 		}
 
-		/*UserRepository userRepository = new UserRepository();
+		UserRepository userRepository = new UserRepository(this.activity);
 
-		try {
-			userRepository.createUserWithEmailAndPassword(email, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return RegisterStatus.REGISTER_UNSUCCESSFUL;
-		}
+		userRepository.createUserWithEmailAndPassword(email, password);
+		userRepository.updateCurrentUserName(name);
 
-		try {
-			userRepository.updateCurrentUserName(name);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return RegisterStatus.NAME_NOT_UPDATED;
-		}*/
+		boolean hasChangedName = Objects.equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName(), name);
 
-		return RegisterStatus.REGISTER_SUCCESSFUL;
+		return userRepository.getUser() != null ?
+				(hasChangedName ?
+						RegisterStatus.REGISTER_SUCCESSFUL : RegisterStatus.NAME_NOT_UPDATED
+				) : RegisterStatus.REGISTER_UNSUCCESSFUL;
 	}
 }
