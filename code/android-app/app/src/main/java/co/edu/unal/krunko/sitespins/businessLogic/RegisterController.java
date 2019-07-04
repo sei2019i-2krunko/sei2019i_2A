@@ -22,7 +22,7 @@ public class RegisterController {
 			return RegisterStatus.INVALID_PASSWORD;
 		}
 
-		UserRepository userRepository = new UserRepository();
+		/*UserRepository userRepository = new UserRepository();
 
 		try {
 			userRepository.createUserWithEmailAndPassword(email, password);
@@ -36,7 +36,7 @@ public class RegisterController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RegisterStatus.NAME_NOT_UPDATED;
-		}
+		}*/
 
 		return RegisterStatus.REGISTER_SUCCESSFUL;
 	}
