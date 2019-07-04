@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import co.edu.unal.krunko.sitespins.R;
+import co.edu.unal.krunko.sitespins.businessLogic.RegisterController;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -70,7 +71,25 @@ public class SignupActivity extends AppCompatActivity {
 	}
 
 	private void createAccount(String name, String email, String password) {
-		// TODO: call the controller
+		RegisterController.RegisterStatus registerStatus = new RegisterController(this).
+				registerWithEmailAndPassword(name, email, password);
+
+		switch (registerStatus) {
+			case INVALID_NAME:
+				break;
+			case INVALID_EMAIL:
+				break;
+			case INVALID_PASSWORD:
+				break;
+			case NAME_NOT_UPDATED:
+				break;
+			case REGISTER_SUCCESSFUL:
+				break;
+			case REGISTER_UNSUCCESSFUL:
+				break;
+			default:
+				break;
+		}
 	}
 
 
