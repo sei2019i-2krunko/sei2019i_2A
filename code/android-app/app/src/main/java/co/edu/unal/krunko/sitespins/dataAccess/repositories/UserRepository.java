@@ -65,9 +65,10 @@ public class UserRepository {
 				} else {
 					Log.w("EmailPassword", "signInWithEmail:failure", task.getException());
 				}
-				user = User.fromFirebaseUser(auth.getCurrentUser());
 			}
 		});
+
+		Log.d("EmailPassword", "actual user " + (this.getUser() != null ? this.getUser().getUid() : "null"));
 
 		return this.getUser();
 	}
