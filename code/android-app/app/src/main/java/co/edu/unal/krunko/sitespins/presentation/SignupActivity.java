@@ -57,6 +57,7 @@ public class SignupActivity extends AppCompatActivity {
 							getApplicationContext(),
 							password,
 							Toast.LENGTH_SHORT).show();
+					_reEnterPasswordText.setError("Las contraseñas no coinciden");
 				}
 			}
 
@@ -76,13 +77,15 @@ public class SignupActivity extends AppCompatActivity {
 
 		switch (registerStatus) {
 			case INVALID_NAME:
+				this._nameText.setError("Debes asignar un nombre válido");
 				break;
 			case INVALID_EMAIL:
+				this._emailText.setError("Debes escribir un correo válido");
 				break;
 			case INVALID_PASSWORD:
+				this._passwordText.setError(getResources().getString(R.string.PASSWORD_ERROR));
 				break;
-			case NAME_NOT_UPDATED:
-				break;
+			// TODO: 3/07/19 Issue when user creates an account :'v
 			case REGISTER_SUCCESSFUL:
 				break;
 			case REGISTER_UNSUCCESSFUL:
