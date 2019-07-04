@@ -40,9 +40,7 @@
         </activity>
         <activity android:name=".presentation.LoginActivity">
             <intent-filter>
-                <!--
-                    TODO: LoginActivity must be the one with action MAIN.
-                -->
+
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
