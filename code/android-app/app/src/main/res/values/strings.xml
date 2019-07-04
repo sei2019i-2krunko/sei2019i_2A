@@ -21,6 +21,8 @@
     <string name="WRONG_CREDENTIALS">Tu correo o contraseña es incorrecta</string>
     <string name="verify_password">Verifica que tu contraseña sea la misma</string>
     <string name="title_activity_maps">Map</string>
+    <string name="goToMaps">Ir a mapas</string>
+    <string name="welcome_main_activity">Welcome</string>
 
 
 </resources>
