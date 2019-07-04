@@ -18,6 +18,7 @@
     <string name="PASSWORD_ERROR">Ingrese contraseña mayor a ocho(8) caracteres</string>
     <string name="successfulLogin">Login exitoso</string>
     <string name="WRONG_CREDENTIALS">Tu correo o contraseña es incorrecta</string>
+    <string name="verify_password">Verifica que tu contraseña sea la misma</string>
 
 
 </resources>

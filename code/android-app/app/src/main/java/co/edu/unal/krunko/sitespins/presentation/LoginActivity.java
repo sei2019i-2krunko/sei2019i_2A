@@ -59,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
 				// Iniciar el Activity de Sign-Up
 				Intent goSignup = new Intent(getApplicationContext(), SignupActivity.class);
 				startActivityForResult(goSignup, REQUEST_SIGNUP);
-				finish();
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});

@@ -52,6 +52,11 @@ public class UserRepository {
 			}
 		});
 
+		try {
+			wait(1500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return this.getUser();
 	}
 
@@ -74,8 +79,7 @@ public class UserRepository {
 	}
 
 
-	public User createUserWithEmailAndPassword(String _email, String _password) throws Exception {
-		final Exception[] exception = new Exception[1];
+	public User createUserWithEmailAndPassword(String _email, String _password) {
 		auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
 			@Override
 			public void onComplete(@NonNull Task<AuthResult> task) {
@@ -84,15 +88,12 @@ public class UserRepository {
 					Log.d("EmailPassword", "signUpWithEmail:success");
 				} else {
 					user = null;
-					exception[0] = task.getException();
-					Log.w("EmailPassword", "signUpWithEmail:failure", exception[0]);
+					Log.w("EmailPassword", "signUpWithEmail:failure", task.getException());
 				}
 			}
 		});
 
-		if (exception[0] != null) {
-			throw exception[0];
-		}
-		return user;
+
+		return this.getUser();
 	}
 }
