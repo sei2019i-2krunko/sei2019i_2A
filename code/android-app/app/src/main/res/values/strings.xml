@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Sites &amp; Pins</string>
+
+    <string name="nombre">Nombre</string>
+    <string name="email">Email</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="confirmar_contraseña">Confirmar contraseña</string>
+
+    <string name="ingresar">Ingresar</string>
+    <string name="facebook">Ingresar con Facebook</string>
+    <string name="google">Ingresar con Google</string>
+    <string name="anónimo">Ingresar como Anónimo</string>
+    <string name="ir_a_registro">¿No tienes cuenta? Crea una</string>
+
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="regresar_a_login">¿Ya tienes una cuenta? Ingresa aquí</string>
+
+    <string name="EMAIL_ERROR">Ingrese e-mail válido</string>
+    <string name="PASSWORD_ERROR">Ingrese contraseña mayor a ocho(8) caracteres</string>
+    <string name="successfulLogin">Login exitoso</string>
+    <string name="WRONG_CREDENTIALS">Tu correo o contraseña es incorrecta</string>
+    <string name="verify_password">Verifica que tu contraseña sea la misma</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="goToMaps">Ir a mapas</string>
+    <string name="welcome_main_activity">Welcome</string>
+
+
+</resources>
