@@ -1,8 +1,18 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
+import android.app.Activity;
+
+import co.edu.unal.krunko.sitespins.dataAccess.models.User;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
 public class LoginController {
+
+	private Activity activity;
+
+
+	public LoginController(Activity activity) {
+		this.activity = activity;
+	}
 
 	public enum LoginStatus {
 		/**
@@ -11,7 +21,7 @@ public class LoginController {
 		 * WRONG CREDENTIALS: the email or the password are/is invalid.
 		 * SUCCESSFUL_LOGIN: the user logging in was successful.
 		 * EMAIL_IS_REQUIRED_OR_INVALID: if the user has enter an invalid email.
-		 * PASSWORD_IS_REQUIRED: if the password has a length lower than 6 characters.
+		 * PASSWORD_IS_REQUIRED: if the password has a length lower than 8 characters.
 		 */
 		WRONG_CREDENTIALS,
 		SUCCESSFUL_LOGIN,
@@ -19,7 +29,7 @@ public class LoginController {
 		PASSWORD_IS_REQUIRED
 	}
 
-	public static LoginStatus loginWithEmailAndPassword(String email, String password) {
+	public LoginStatus loginWithEmailAndPassword(String email, String password) {
 		if (email == null
 				|| !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$")) {
 			return LoginStatus.EMAIL_IS_REQUIRED_OR_INVALID;
@@ -27,17 +37,14 @@ public class LoginController {
 			return LoginStatus.PASSWORD_IS_REQUIRED;
 		}
 
-		UserRepository userRepository = new UserRepository();
-
-		try {
-			userRepository.getUserByEmailAndPassword(email, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return LoginStatus.WRONG_CREDENTIALS;
-		}
+		UserRepository userRepository = new UserRepository(this.activity);
 
 
-		return LoginStatus.SUCCESSFUL_LOGIN;
+		return userRepository.getUserByEmailAndPassword(email, password) != null ? LoginStatus.SUCCESSFUL_LOGIN : LoginStatus.WRONG_CREDENTIALS;
+	}
+
+	public boolean isLoggedIn(){
+		return new UserRepository(null).getUser() != null;
 	}
 
 }

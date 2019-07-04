@@ -2,114 +2,133 @@ package co.edu.unal.krunko.sitespins.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import co.edu.unal.krunko.sitespins.R;
 import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int REQUEST_SIGNUP = 0;
+	private static final int REQUEST_SIGNUP = 0;
 
-    EditText _emailText;
-    EditText _passwordText;
+	EditText _emailText;
+	EditText _passwordText;
 
-    Button _loginButton;
-    Button _anonimoButton;
+	Button _loginButton;
+	Button _anonimoButton;
 
-    TextView _signupLink;
+	TextView _signupLink;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
 
-        initViews();
+		FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+			@Override
+			public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+				FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        _signupLink.setOnClickListener(new View.OnClickListener() {
+				if (firebaseUser != null) {
+					goToMainActivity();
 
-            @Override
-            public void onClick(View v) {
-                // Iniciar el Activity de Sign-Up
-                Intent goSignup = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(goSignup, REQUEST_SIGNUP);
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            }
-        });
+				} else {
+					Log.d("Activity", "In SignedinFirebaseMethod");
+				}
+			}
+		};
 
-        _loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Login
-                LocalLogin(_emailText.getText().toString(),_passwordText.getText().toString());
-            }
-        });
+		FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
 
-        _anonimoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToMapsActivity();
+		initViews();
 
-            }
-        });
+		_signupLink.setOnClickListener(new View.OnClickListener() {
 
-        // TODO: Completar el Activity <:
+			@Override
+			public void onClick(View v) {
+				// Iniciar el Activity de Sign-Up
+				Intent goSignup = new Intent(getApplicationContext(), SignupActivity.class);
+				startActivityForResult(goSignup, REQUEST_SIGNUP);
+				finish();
+				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+			}
+		});
 
-    }
+		_loginButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Login
+				login(_emailText.getText().toString(), _passwordText.getText().toString());
+			}
+		});
+
+		_anonimoButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goToMapsActivity();
+
+			}
+		});
+
+	}
 
 
-    private LoginController loginController;
-    //public static User logedUser;
+	private void login(String email, String password) {
 
-    private void LocalLogin(String email, String password){
-        loginController = new LoginController();
+		LoginController.LoginStatus loginStatus = new LoginController(this).loginWithEmailAndPassword(email, password);
 
-        String msg = loginController.loginWithEmailAndPassword(email, password);
+		switch (loginStatus) {
+			case WRONG_CREDENTIALS:
+				_emailText.setError(getResources().getString(R.string.WRONG_CREDENTIALS));
+				_passwordText.setError(getResources().getString(R.string.WRONG_CREDENTIALS));
+				break;
+			case SUCCESSFUL_LOGIN:
+				goToMainActivity();
+				break;
+			case EMAIL_IS_REQUIRED_OR_INVALID:
+				_emailText.setError(getResources().getString(R.string.EMAIL_ERROR));
+				break;
+			case PASSWORD_IS_REQUIRED:
+				_passwordText.setError(getResources().getString(R.string.PASSWORD_ERROR));
+				break;
+			default:
+				break;
 
-        if(msg.equalsIgnoreCase("Ingreso Exitoso")){
-            //logedUser = loginController.getUser();
-            goToMainActivity();
+		}
+	}
 
-        }else if(msg.equalsIgnoreCase("Ingrese e-mail")){
-            _emailText.setError(msg);
+	private LoginController loginController;
 
-        }else if(msg.equalsIgnoreCase("Ingrese contraseña")){
-            _passwordText.setError(msg);
+	private void goToMainActivity() {
+		Intent mainAct = new Intent(getApplicationContext(), MainActivity.class);
+		startActivity(mainAct);
+		finish();
+	}
 
-        }else if(msg.equalsIgnoreCase("El e-mail no está registrado")){
-            _emailText.setError(msg);
+	private void goToMapsActivity() {
+		Intent mapsAct = new Intent(getApplicationContext(), MapsActivity.class);
+		startActivity(mapsAct);
+	}
 
-        }else if(msg.equalsIgnoreCase("Contraseña incorrecta")){
-            _passwordText.setError(msg);
-        }else{
-            System.out.println("Error en Login Actiyvity -> Local Login");
-        }
-    }
+	private void initViews() {
 
-    private void goToMainActivity(){
-        Intent mainAct = new Intent (getApplicationContext(), MainActivity.class);
-        startActivity(mainAct);
-    }
-    private void goToMapsActivity(){
-        Intent mapsAct = new Intent (getApplicationContext(), MapsActivity.class);
-        startActivity(mapsAct);
-    }
+		// Inicialización de Botones y Campos de Texto (desde Layout)
+		_emailText = findViewById(R.id.input_email);
+		_passwordText = findViewById(R.id.input_password);
 
-    private void initViews(){
+		_loginButton = findViewById(R.id.btn_login);
+		_anonimoButton = findViewById(R.id.btn_login_A);
 
-        // Inicialización de Botones y Campos de Texto (desde Layout)
-        _emailText = findViewById(R.id.input_email);
-        _passwordText = findViewById(R.id.input_password);
-
-        _loginButton = findViewById(R.id.btn_login);
-        _anonimoButton= findViewById(R.id.btn_login_A);
-
-        _signupLink = findViewById(R.id.link_signup);
-    }
+		_signupLink = findViewById(R.id.link_signup);
+	}
 }
