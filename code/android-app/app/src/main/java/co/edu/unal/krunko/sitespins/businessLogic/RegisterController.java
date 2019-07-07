@@ -39,7 +39,8 @@ public class RegisterController {
 		userRepository.createUserWithEmailAndPassword(email, password);
 		userRepository.updateCurrentUserName(name);
 
-		boolean hasChangedName = Objects.equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName(), name);
+		boolean hasChangedName = FirebaseAuth.getInstance().getCurrentUser() != null &&
+				FirebaseAuth.getInstance().getCurrentUser().getDisplayName().equals(name);
 
 		return userRepository.getUser() != null ?
 				(hasChangedName ?
