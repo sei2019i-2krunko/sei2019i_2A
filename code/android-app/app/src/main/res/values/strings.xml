@@ -24,6 +24,7 @@
     <string name="goToMaps">Ir a mapas</string>
     <string name="welcome_main_activity">Welcome</string>
     <string name="loading_message">Loading...</string>
+    <string name="sign_out">Cerrar sesión</string>
 
 
 </resources>
