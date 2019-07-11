@@ -11,7 +11,7 @@
     >
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_signout"
+        android:id="@+id/btn_sign_out"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
