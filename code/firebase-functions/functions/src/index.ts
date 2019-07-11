@@ -65,3 +65,9 @@ exports.delete_user_document = functions.auth.user().onDelete((user, context) =>
 	console.error('[Delete user document] Invalid user id', user.uid)
 	return false
 })
+
+// this function will save a map point in firestore
+exports.save_map_point = functions.https.onCall((data, context) => {
+
+	return false
+})
