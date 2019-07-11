@@ -17,7 +17,7 @@ exports.create_user_document = functions.auth.user().onCreate((user, context) =>
 		console.log('[Create user document] Function will be affecting', user.uid)
 
 		console.log('[Create user document] Accessing to:', u_doc)
-		const docRef = db.collection('users').doc(user.uid)
+		const docRef = db.doc(u_doc)
 
 		console.log('[Create user document] Setting information up in the document:', u_doc)
 
@@ -50,7 +50,7 @@ exports.delete_user_document = functions.auth.user().onDelete((user, context) =>
 		console.log('[Delete user document] Function will be affecting', user.uid)
 
 		console.log('[Delete user document] Accessing to document', u_doc)
-		const docRef = db.collection('users').doc(user.uid)
+		const docRef = db.doc(u_doc)
 
 		console.log('[Delete user document] Deleting document', u_doc)
 
@@ -76,23 +76,59 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 
 
 	// we verify if the user has passed as argument the point or latitute and longitude
-	const point = data.point || null
+	let point: GeoPoint = data.point || null
 
-	const latitude = data.latitude || null
-	const longitude = data.longitude || null
+	const latitude: number = data.latitude || null
+	const longitude: number = data.longitude || null
+
+	const name: string = data.name || null
 
 	// if it is a valid user
 	if (uid) {
-		//user document
-		const u_doc = '/users/' + uid
 
+		//marker's user collection
+		const collection_path = '/users/' + uid + '/markers/'
+		const collection_ref = db.collection(collection_path)
+
+		let doc_info: { name: string; position: GeoPoint; } | { position: GeoPoint; name?: undefined; } | { name: string; position: GeoPoint; } | { position: GeoPoint; name?: undefined; }
+
+		// if a non-null point was given
 		if (point) {
 			if (point instanceof GeoPoint) {
-				//do something
+				doc_info = name ? { name: name, position: point } : { position: point }
+
+				// it creates a document with an auto-id
+				return collection_ref.add(doc_info).catch(error => {
+
+					console.error('[Save new map point] latitude:', point.latitude)
+					console.error('[Save new map point] longitude:', point.longitude)
+
+					console.error(
+						'[Save new map point] There was a problem at trying to create the document',
+						'\nWith error:', error
+					)
+				})
 			}
-		} else if (latitude && longitude) {
-			if (latitude instanceof Number && longitude instanceof Number) {
-				//do something
+
+		}
+		// if a non-null latitude and longitude were given
+		else if (latitude && longitude) {
+			if (typeof latitude === 'number' && typeof longitude === 'number') {
+				point = new GeoPoint(latitude, longitude)
+
+				doc_info = name ? { name: name, position: point } : { position: point }
+
+				// it creates a document with an auto-id
+				return collection_ref.add(doc_info).catch(error => {
+
+					console.error('[Save new map point] latitude:', latitude)
+					console.error('[Save new map point] longitude:', longitude)
+
+					console.error(
+						'[Save new map point] There was a problem at trying to create the document',
+						'\nWith error:', error
+					)
+				})
 			}
 		}
 		console.error('[Save new map point] Invalid arguments were given')
