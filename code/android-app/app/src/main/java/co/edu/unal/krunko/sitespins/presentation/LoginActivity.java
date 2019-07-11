@@ -29,6 +29,7 @@ import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
 public class LoginActivity extends AppCompatActivity {
 
 	private static final int REQUEST_SIGNUP = 0;
+	private CallbackManager callbackManager;
 
 	EditText _emailText;
 	EditText _passwordText;
@@ -88,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 
+
 		_facebookButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -95,12 +97,11 @@ public class LoginActivity extends AppCompatActivity {
 				//LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 			}
 		});
-
+		callbackManager = CallbackManager.Factory.create();
 	}
 
 	private void fbAuth(){
-		LoginController loginController = new LoginController(this);
-		_facebookButton.registerCallback(loginController.getCallbackManager(), new FacebookCallback<LoginResult>() {
+		_facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 			@Override
 			public void onSuccess(LoginResult loginResult) {
 				Log.d("FBLogin_Success","facebook:onSuccess: " + loginResult);
@@ -125,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		new LoginController().getCallbackManager().onActivityResult(requestCode, resultCode, data);
+		 callbackManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

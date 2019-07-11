@@ -26,7 +26,6 @@ public class UserRepository {
 	private FirebaseAuth auth;
 	private User user;
 	private Activity activity;
-	private CallbackManager mCallbackManager;
 	private AccessToken fbLoggedIn;
 
 
@@ -34,8 +33,14 @@ public class UserRepository {
 		this.auth = FirebaseAuth.getInstance();
 		this.user = User.fromFirebaseUser(this.auth.getCurrentUser());
 		this.activity = activity;
-		this.mCallbackManager = CallbackManager.Factory.create();
 		this.fbLoggedIn = AccessToken.getCurrentAccessToken();
+	}
+
+	public UserRepository(Activity activity, AccessToken token){
+		this.auth = FirebaseAuth.getInstance();
+		this.user = User.fromFirebaseUser(this.auth.getCurrentUser());
+		this.activity = activity;
+		this.fbLoggedIn = token;
 	}
 
 	public User getUser() {
@@ -47,7 +52,7 @@ public class UserRepository {
 		Log.d("FacebookToken", "handleFacebookAccessToken:" + token.getToken());
 		AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 		auth.signInWithCredential(credential)
-				.addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+				.addOnCompleteListener((Executor) this.activity, new OnCompleteListener<AuthResult>() {
 					@Override
 					public void onComplete(@NonNull Task<AuthResult> task) {
 						if (task.isSuccessful()) {
@@ -130,10 +135,6 @@ public class UserRepository {
 
 	public boolean fbTokenExist(){
 		return this.fbLoggedIn != null && !this.fbLoggedIn.isExpired();
-	}
-
-	public CallbackManager getmCallbackManager() {
-		return mCallbackManager;
 	}
 
 	public AccessToken getFbLoggedIn() {

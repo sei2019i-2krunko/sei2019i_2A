@@ -55,7 +55,7 @@ public class LoginController {
 	}
 
 	public void handleFacebookAccessToken(AccessToken token) {
-		UserRepository userRepository = new UserRepository(this.activity);
+		UserRepository userRepository = new UserRepository(this.activity,token);
 		if(userRepository.getFacebookUser(token) != null){
 			Toast.makeText(this.activity, "Authentication success.",
 					Toast.LENGTH_SHORT).show();
@@ -63,9 +63,5 @@ public class LoginController {
 			Toast.makeText(this.activity, "Authentication failed.",
 					Toast.LENGTH_SHORT).show();
 		}
-	}
-
-	public CallbackManager getCallbackManager(){
-		return new UserRepository(this.activity).getmCallbackManager();
 	}
 }
