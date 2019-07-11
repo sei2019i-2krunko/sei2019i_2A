@@ -52,7 +52,7 @@ public class UserRepository {
 		Log.d("FacebookToken", "handleFacebookAccessToken:" + token.getToken());
 		AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 		auth.signInWithCredential(credential)
-				.addOnCompleteListener((Executor) this.activity, new OnCompleteListener<AuthResult>() {
+				.addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
 					@Override
 					public void onComplete(@NonNull Task<AuthResult> task) {
 						if (task.isSuccessful()) {

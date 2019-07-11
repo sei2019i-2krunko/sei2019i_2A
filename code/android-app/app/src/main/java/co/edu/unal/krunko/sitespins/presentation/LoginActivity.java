@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 			public void onSuccess(LoginResult loginResult) {
 				Log.d("FBLogin_Success","facebook:onSuccess: " + loginResult);
 				new LoginController().handleFacebookAccessToken(loginResult.getAccessToken());
+				goToMainActivity();
 			}
 
 			@Override
