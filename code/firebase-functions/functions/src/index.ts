@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions'
 import admin = require('firebase-admin')
+import { GeoPoint } from '@google-cloud/firestore';
 
 admin.initializeApp(functions.config().firebase)
 
@@ -66,8 +67,40 @@ exports.delete_user_document = functions.auth.user().onDelete((user, context) =>
 	return false
 })
 
-// this function will save a map point in firestore
-exports.save_map_point = functions.https.onCall((data, context) => {
+// this function will save a geo point in firestore
+exports.save_new_geo_point = functions.https.onCall((data, context) => {
+	console.log('[Save new map point] Function has been called.')
+
+	const uid = context.auth.uid
+
+
+
+	// we verify if the user has passed as argument the point or latitute and longitude
+	const point = data.point || null
+
+	const latitude = data.latitude || null
+	const longitude = data.longitude || null
+
+	// if it is a valid user
+	if (uid) {
+		//user document
+		const u_doc = '/users/' + uid
+
+		if (point) {
+			if (point instanceof GeoPoint) {
+				//do something
+			}
+		} else if (latitude && longitude) {
+			if (latitude instanceof Number && longitude instanceof Number) {
+				//do something
+			}
+		}
+		console.error('[Save new map point] Invalid arguments were given')
+		console.error('[Save new map point] point:', point)
+		console.error('[Save new map point] latitude:', latitude)
+		console.error('[Save new map point] longitude:', longitude)
+		return false
+	}
 
 	return false
 })
