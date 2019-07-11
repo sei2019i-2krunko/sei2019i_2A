@@ -24,5 +24,10 @@
     <string name="goToMaps">Ir a mapas</string>
     <string name="welcome_main_activity">Welcome</string>
 
+    // Facebook login
+    <string name="facebook_app_id">2418555221700748</string>
+    <string name="fb_login_protocol_scheme">fb2418555221700748</string>
+
+
 
 </resources>

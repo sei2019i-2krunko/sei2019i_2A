@@ -1,6 +1,11 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
 import android.app.Activity;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
 
 import co.edu.unal.krunko.sitespins.dataAccess.models.User;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
@@ -10,9 +15,11 @@ public class LoginController {
 	private Activity activity;
 
 
+
 	public LoginController(Activity activity) {
 		this.activity = activity;
 	}
+	public LoginController() {}
 
 	public enum LoginStatus {
 		/**
@@ -47,4 +54,18 @@ public class LoginController {
 		return new UserRepository(null).getUser() != null;
 	}
 
+	public void handleFacebookAccessToken(AccessToken token) {
+		UserRepository userRepository = new UserRepository(this.activity);
+		if(userRepository.getFacebookUser(token) != null){
+			Toast.makeText(this.activity, "Authentication success.",
+					Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(this.activity, "Authentication failed.",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	public CallbackManager getCallbackManager(){
+		return new UserRepository(this.activity).getmCallbackManager();
+	}
 }
