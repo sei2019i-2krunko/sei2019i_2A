@@ -51,7 +51,7 @@ public class LoginController {
 
 	public void handleFacebookAccessToken(AccessToken token) {
 		UserRepository userRepository = new UserRepository(this.activity,token);
-		if(userRepository.getFacebookUser(token) != null){
+		if(userRepository.getFacebookUser() != null){
 			Toast.makeText(this.activity, "Authentication success.",
 					Toast.LENGTH_SHORT).show();
 		}else{

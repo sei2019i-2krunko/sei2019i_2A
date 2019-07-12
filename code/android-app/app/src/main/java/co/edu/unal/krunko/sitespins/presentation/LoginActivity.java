@@ -1,5 +1,6 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
 
 		FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
 		initViews();
-		isLoggedIn();
 
 		_signupLink.setOnClickListener(new View.OnClickListener() {
 
@@ -85,35 +85,35 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 
-
 		_facebookButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fbAuth();
-				//LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 			}
 		});
+
 		callbackManager = CallbackManager.Factory.create();
 	}
 
-	private void fbAuth(){
+	private void fbAuth() {
+		final Activity activity = this;
 		_facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 			@Override
 			public void onSuccess(LoginResult loginResult) {
-				Log.d("FBLogin_Success","facebook:onSuccess: " + loginResult);
-				new LoginController().handleFacebookAccessToken(loginResult.getAccessToken());
+				Log.d("FBLogin_Success", "facebook:onSuccess: " + loginResult);
+				new LoginController(activity).handleFacebookAccessToken(loginResult.getAccessToken());
+
 			}
 
 			@Override
 			public void onCancel() {
-				Log.d("FBLogin_Cancel","facebook:onCancel");
+				Log.d("FBLogin_Cancel", "facebook:onCancel");
 				// Show message cancel
-
 			}
 
 			@Override
 			public void onError(FacebookException error) {
-				Log.d("FBLogin_Error","facebook:onError: ", error);
+				Log.d("FBLogin_Error", "facebook:onError: ", error);
 				// Show message error
 
 			}
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		 callbackManager.onActivityResult(requestCode, resultCode, data);
+		callbackManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -147,13 +147,6 @@ public class LoginActivity extends AppCompatActivity {
 			default:
 				break;
 
-		}
-	}
-
-	private void isLoggedIn(){
-		//_facebookButton.setReadPermissions("email","public_profile");
-		if(new LoginController(this).isLoggedIn()){
-			goToMainActivity();
 		}
 	}
 
