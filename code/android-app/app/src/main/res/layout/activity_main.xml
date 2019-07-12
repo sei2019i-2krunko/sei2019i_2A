@@ -10,11 +10,21 @@
     android:paddingBottom="16dp"
     >
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_out"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="213dp"
+        android:padding="12dp"
+        android:text="@string/sign_out" />
+
     <TextView
-        android:text="@string/welcome_main_activity"
+        android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    />
+        android:text="@string/welcome_main_activity" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_maps"

@@ -1,6 +1,5 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,12 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.Login;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -106,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 			public void onSuccess(LoginResult loginResult) {
 				Log.d("FBLogin_Success","facebook:onSuccess: " + loginResult);
 				new LoginController().handleFacebookAccessToken(loginResult.getAccessToken());
-				goToMainActivity();
 			}
 
 			@Override

@@ -1,20 +1,15 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 
-import co.edu.unal.krunko.sitespins.dataAccess.models.User;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
 public class LoginController {
 
 	private Activity activity;
-
-
 
 	public LoginController(Activity activity) {
 		this.activity = activity;
