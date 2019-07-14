@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	private void ggAuth(){
 		LoginController loginController = new LoginController(this);
-		startActivityForResult(loginController.handleGoogleSignUp(),RC_SIGN_IN);
+		startActivityForResult(loginController.handleGoogleSignUp(getString(R.string.default_web_client_id)),RC_SIGN_IN);
 	}
 	private void fbAuth() {
 		final Activity activity = this;

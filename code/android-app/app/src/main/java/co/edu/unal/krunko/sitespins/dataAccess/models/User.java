@@ -92,11 +92,11 @@ public class User {
 
 	public static User fromGoogleUser(GoogleSignInAccount account){
 		return account == null ? null : new User(
-				account.getIdToken(),
+				account.getId(),
 				account.getDisplayName(),
 				account.getPhotoUrl(),
 				account.getEmail(),
-				account.getId()
+				account.getIdToken()
 		);
 	}
 }

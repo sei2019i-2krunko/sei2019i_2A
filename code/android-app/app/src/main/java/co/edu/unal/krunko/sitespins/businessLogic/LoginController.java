@@ -69,8 +69,9 @@ public class LoginController {
 		}
 	}
 
-	public Intent handleGoogleSignUp() {
+	public Intent handleGoogleSignUp(String clientId) {
 		GoogleSignInOptions ggo = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestIdToken(clientId)
 				.requestEmail()
 				.build();
 		UserRepository userRepository = new UserRepository(this.activity, ggo);
@@ -80,7 +81,7 @@ public class LoginController {
 
 	public void handleGoogleSignInResult(Intent data) {
 		com.google.android.gms.tasks.Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-		if( new UserRepository().getGoogleUser(task) != null){
+		if( new UserRepository(this.activity).getGoogleUser(task) != null){
 			// Access success
 		}
 	}

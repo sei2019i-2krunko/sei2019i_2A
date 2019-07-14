@@ -41,6 +41,8 @@ public class UserRepository {
 
 
 	public UserRepository() {
+		this.auth = FirebaseAuth.getInstance();
+		this.user = User.fromFirebaseUser(auth.getCurrentUser());
 	}
 
 	public UserRepository(Activity activity) {
@@ -72,6 +74,7 @@ public class UserRepository {
 	public User getGoogleUser(Task<GoogleSignInAccount> completedTask) {
 		try {
 			final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
 			Log.d("Google firebase access", "firebaseAuthWithGoogle:" + account.getId());
 			AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 			auth.signInWithCredential(credential)
@@ -81,7 +84,7 @@ public class UserRepository {
 							if (task.isSuccessful()) {
 								// Sign in success, update UI with the signed-in user's information
 								Log.d("Login success", "signInWithCredential:success");
-								user = User.fromGoogleUser(account);
+								user = User.fromFirebaseUser(auth.getCurrentUser());
 							} else {
 								// If sign in fails, display a message to the user.
 								Log.w("Login failed", "signInWithCredential:failure", task.getException());
