@@ -80,8 +80,7 @@ public class LoginController {
 
 	public void handleGoogleSignInResult(Intent data) {
 		com.google.android.gms.tasks.Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-		UserRepository user = new UserRepository();
-		if(user.getGoogleUser(task) != null){
+		if( new UserRepository().getGoogleUser(task) != null){
 			// Access success
 		}
 	}

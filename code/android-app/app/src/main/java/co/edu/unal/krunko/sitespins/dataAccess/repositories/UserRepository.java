@@ -41,7 +41,6 @@ public class UserRepository {
 
 
 	public UserRepository() {
-
 	}
 
 	public UserRepository(Activity activity) {
@@ -51,7 +50,7 @@ public class UserRepository {
 		this.fbLoggedIn = AccessToken.getCurrentAccessToken();
 	}
 
-	public UserRepository(Activity activity, AccessToken token){
+	public UserRepository(Activity activity, AccessToken token) {
 		this.auth = FirebaseAuth.getInstance();
 		this.activity = activity;
 		this.fbLoggedIn = token;
@@ -61,7 +60,7 @@ public class UserRepository {
 		this.auth = FirebaseAuth.getInstance();
 		this.activity = activity;
 		this.ggOptions = ggOptions;
-		this.ggLoggedIn = GoogleSignIn.getClient(this.activity,this.ggOptions);
+		this.ggLoggedIn = GoogleSignIn.getClient(this.activity, ggOptions);
 		this.user = User.fromFirebaseUser(this.auth.getCurrentUser());
 	}
 
@@ -70,8 +69,8 @@ public class UserRepository {
 		return this.user;
 	}
 
-	public User getGoogleUser(Task<GoogleSignInAccount> completedTask){
-		try{
+	public User getGoogleUser(Task<GoogleSignInAccount> completedTask) {
+		try {
 			final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 			Log.d("Google firebase access", "firebaseAuthWithGoogle:" + account.getId());
 			AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -91,14 +90,13 @@ public class UserRepository {
 						}
 					});
 
-		} catch(ApiException e){
-			Log.w("Google sign in access ", "signInResult:failed code=" + e.getStatusCode());
+		} catch (ApiException e) {
+			Log.w("Google sign in error ", "signInResult:failed code=" + e.getStatusCode());
 			user = null;
 		}
 		return user;
 	}
-
-	public User getFacebookUser(){
+	public User getFacebookUser() {
 		Log.d("FacebookToken", "handleFacebookAccessToken:" + this.fbLoggedIn.getToken());
 		AuthCredential credential = FacebookAuthProvider.getCredential(this.fbLoggedIn.getToken());
 		this.auth.signInWithCredential(credential)
@@ -183,7 +181,7 @@ public class UserRepository {
 		return this.getUser();
 	}
 
-	public boolean fbTokenExist(){
+	public boolean fbTokenExist() {
 		return this.fbLoggedIn != null && !this.fbLoggedIn.isExpired();
 	}
 
