@@ -1,10 +1,17 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 
+import bolts.Task;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
 public class LoginController {
@@ -14,7 +21,9 @@ public class LoginController {
 	public LoginController(Activity activity) {
 		this.activity = activity;
 	}
-	public LoginController() {}
+
+	public LoginController() {
+	}
 
 	public enum LoginStatus {
 		/**
@@ -45,18 +54,36 @@ public class LoginController {
 		return userRepository.getUserByEmailAndPassword(email, password) != null ? LoginStatus.SUCCESSFUL_LOGIN : LoginStatus.WRONG_CREDENTIALS;
 	}
 
-	public boolean isLoggedIn(){
+	public boolean isLoggedIn() {
 		return new UserRepository(null).getUser() != null;
 	}
 
 	public void handleFacebookAccessToken(AccessToken token) {
-		UserRepository userRepository = new UserRepository(this.activity,token);
-		if(userRepository.getFacebookUser() != null){
+		UserRepository userRepository = new UserRepository(this.activity, token);
+		if (userRepository.getFacebookUser() != null) {
 			Toast.makeText(this.activity, "Authentication success.",
 					Toast.LENGTH_SHORT).show();
-		}else{
+		} else {
 			Toast.makeText(this.activity, "Authentication failed.",
 					Toast.LENGTH_SHORT).show();
 		}
 	}
+
+	public Intent handleGoogleSignUp(String clientId) {
+		GoogleSignInOptions ggo = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestIdToken(clientId)
+				.requestEmail()
+				.build();
+		UserRepository userRepository = new UserRepository(this.activity, ggo);
+		Intent signInIntent = userRepository.getGgLoggedIn().getSignInIntent();
+		return signInIntent;
+	}
+
+	public void handleGoogleSignInResult(Intent data) {
+		com.google.android.gms.tasks.Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+		if( new UserRepository(this.activity).getGoogleUser(task) != null){
+			// Access success
+		}
+	}
+
 }
