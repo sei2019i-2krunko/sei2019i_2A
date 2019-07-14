@@ -50,7 +50,6 @@
         <activity android:name=".presentation.MainActivity" />
         <activity android:name=".presentation.SignupActivity" />
 
-        // Facebook login
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -73,5 +72,6 @@
         </activity>
 
         <activity android:name=".presentation.LoadingActivity" />
+
     </application>
 </manifest>

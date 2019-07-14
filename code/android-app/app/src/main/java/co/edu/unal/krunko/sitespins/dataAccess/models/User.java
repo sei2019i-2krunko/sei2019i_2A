@@ -2,6 +2,7 @@ package co.edu.unal.krunko.sitespins.dataAccess.models;
 
 import android.net.Uri;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 
 public class User {
@@ -86,6 +87,16 @@ public class User {
 				firebaseUser.getPhotoUrl(),
 				firebaseUser.getEmail(),
 				firebaseUser.getProviderId()
+		);
+	}
+
+	public static User fromGoogleUser(GoogleSignInAccount account){
+		return account == null ? null : new User(
+				account.getIdToken(),
+				account.getDisplayName(),
+				account.getPhotoUrl(),
+				account.getEmail(),
+				account.getId()
 		);
 	}
 }

@@ -17,6 +17,10 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +30,7 @@ import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
 public class LoginActivity extends AppCompatActivity {
 
 	private static final int REQUEST_SIGNUP = 0;
+	private static final int RC_SIGN_IN = 0;
 	private CallbackManager callbackManager;
 
 	EditText _emailText;
@@ -34,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 	Button _loginButton;
 	Button _anonimoButton;
 	LoginButton _facebookButton;
+	SignInButton _signInGoogle;
 
 	TextView _signupLink;
 
@@ -73,8 +79,14 @@ public class LoginActivity extends AppCompatActivity {
 		_loginButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Login
 				login(_emailText.getText().toString(), _passwordText.getText().toString());
+			}
+		});
+
+		_signInGoogle.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v){
+				ggAuth();
 			}
 		});
 
@@ -95,6 +107,10 @@ public class LoginActivity extends AppCompatActivity {
 		callbackManager = CallbackManager.Factory.create();
 	}
 
+	private void ggAuth(){
+		LoginController loginController = new LoginController(this);
+		startActivityForResult(loginController.handleGoogleSignUp(),RC_SIGN_IN);
+	}
 	private void fbAuth() {
 		final Activity activity = this;
 		_facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -102,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
 			public void onSuccess(LoginResult loginResult) {
 				Log.d("FBLogin_Success", "facebook:onSuccess: " + loginResult);
 				new LoginController(activity).handleFacebookAccessToken(loginResult.getAccessToken());
-
 			}
 
 			@Override
@@ -115,7 +130,6 @@ public class LoginActivity extends AppCompatActivity {
 			public void onError(FacebookException error) {
 				Log.d("FBLogin_Error", "facebook:onError: ", error);
 				// Show message error
-
 			}
 		});
 	}
@@ -124,6 +138,9 @@ public class LoginActivity extends AppCompatActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == RC_SIGN_IN) {
+			new LoginController(this).handleGoogleSignInResult(data);
+		}
 	}
 
 	private void login(String email, String password) {
@@ -172,6 +189,7 @@ public class LoginActivity extends AppCompatActivity {
 
 		_signupLink = findViewById(R.id.link_signup);
 		_facebookButton = (LoginButton) findViewById(R.id.btn_login_FB);
+		_signInGoogle = findViewById(R.id.btn_login_G);
 
 	}
 }
