@@ -145,26 +145,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	private void login(String email, String password) {
 
-		LoginController.LoginStatus loginStatus = new LoginController(this).loginWithEmailAndPassword(email, password);
-
-		switch (loginStatus) {
-			case WRONG_CREDENTIALS:
-				_emailText.setError(getResources().getString(R.string.WRONG_CREDENTIALS));
-				_passwordText.setError(getResources().getString(R.string.WRONG_CREDENTIALS));
-				break;
-			case SUCCESSFUL_LOGIN:
-				goToMainActivity();
-				break;
-			case EMAIL_IS_REQUIRED_OR_INVALID:
-				_emailText.setError(getResources().getString(R.string.EMAIL_ERROR));
-				break;
-			case PASSWORD_IS_REQUIRED:
-				_passwordText.setError(getResources().getString(R.string.PASSWORD_ERROR));
-				break;
-			default:
-				break;
-
-		}
+		// TODO: 16/07/19 implement LoginWithEmailAndPasswordTask :v 
 	}
 
 	private void goToMainActivity() {
