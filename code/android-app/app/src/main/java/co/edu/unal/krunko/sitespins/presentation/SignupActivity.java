@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import co.edu.unal.krunko.sitespins.R;
-import co.edu.unal.krunko.sitespins.businessLogic.RegisterController;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -20,7 +19,7 @@ public class SignupActivity extends AppCompatActivity {
 	EditText _passwordText;
 
 	EditText _reEnterPasswordText;
-	Button _signupButton;
+	Button _signUpButton;
 	TextView _loginLink;
 
 	@Override
@@ -43,7 +42,7 @@ public class SignupActivity extends AppCompatActivity {
 
 		final String password = getResources().getString(R.string.verify_password);
 
-		_signupButton.setOnClickListener(new View.OnClickListener() {
+		_signUpButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (passwordsMatch()) {
@@ -72,26 +71,7 @@ public class SignupActivity extends AppCompatActivity {
 	}
 
 	private void createAccount(String name, String email, String password) {
-		RegisterController.RegisterStatus registerStatus = new RegisterController(this).
-				registerWithEmailAndPassword(name, email, password);
-
-		switch (registerStatus) {
-			case INVALID_NAME:
-				this._nameText.setError("Debes asignar un nombre válido");
-				break;
-			case INVALID_EMAIL:
-				this._emailText.setError("Debes escribir un correo válido");
-				break;
-			case INVALID_PASSWORD:
-				this._passwordText.setError(getResources().getString(R.string.PASSWORD_ERROR));
-				break;
-			case REGISTER_SUCCESSFUL:
-				break;
-			case REGISTER_UNSUCCESSFUL:
-				break;
-			default:
-				break;
-		}
+		// TODO: 16/07/19 implement RegisterEmailPasswordTask
 	}
 
 
@@ -101,7 +81,7 @@ public class SignupActivity extends AppCompatActivity {
 		this._emailText = findViewById(R.id.input_email);
 		this._passwordText = findViewById(R.id.input_password);
 		this._reEnterPasswordText = findViewById(R.id.input_reEnterPassword);
-		this._signupButton = findViewById(R.id.btn_signup);
+		this._signUpButton = findViewById(R.id.btn_signup);
 		this._loginLink = findViewById(R.id.link_login);
 	}
 

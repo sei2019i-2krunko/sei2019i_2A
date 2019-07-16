@@ -2,7 +2,7 @@ package co.edu.unal.krunko.sitespins.businessLogic;
 
 import android.app.Activity;
 
-import com.google.firebase.auth.FirebaseAuth;
+import java.util.concurrent.ExecutionException;
 
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
@@ -15,6 +15,7 @@ public class RegisterController {
 	}
 
 	public enum RegisterStatus {
+		PENDING,
 		INVALID_NAME,
 		INVALID_EMAIL,
 		NAME_NOT_UPDATED,
@@ -23,11 +24,11 @@ public class RegisterController {
 		REGISTER_UNSUCCESSFUL
 	}
 
-	public static boolean invalidEmail(String email){
-	    return email == null || !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$");
-    }
+	public static boolean invalidEmail(String email) {
+		return email == null || !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$");
+	}
 
-	public RegisterStatus registerWithEmailAndPassword(String name, String email, String password) {
+	public RegisterStatus registerWithEmailAndPassword(String name, String email, String password) throws ExecutionException, InterruptedException {
 		if (name == null || name.isEmpty()) {
 			return RegisterStatus.INVALID_NAME;
 		} else if (RegisterController.invalidEmail(email)) {
@@ -41,12 +42,6 @@ public class RegisterController {
 		userRepository.createUserWithEmailAndPassword(email, password);
 		userRepository.updateCurrentUserName(name);
 
-		boolean hasChangedName = FirebaseAuth.getInstance().getCurrentUser() != null &&
-				FirebaseAuth.getInstance().getCurrentUser().getDisplayName().equals(name);
-
-		return userRepository.getUser() != null ?
-				(hasChangedName ?
-						RegisterStatus.REGISTER_SUCCESSFUL : RegisterStatus.NAME_NOT_UPDATED
-				) : RegisterStatus.REGISTER_UNSUCCESSFUL;
+		return RegisterStatus.PENDING;
 	}
 }

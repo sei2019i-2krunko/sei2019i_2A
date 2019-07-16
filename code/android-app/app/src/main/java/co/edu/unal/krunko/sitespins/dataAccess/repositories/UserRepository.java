@@ -121,13 +121,13 @@ public class UserRepository {
 		return user;
 	}
 
-	public User updateCurrentUserName(String displayName) {
+	public User updateCurrentUserName(String displayName) throws ExecutionException, InterruptedException {
 
 		if (this.getUser() == null) {
 			return null;
 		}
 
-		Objects.requireNonNull(this.auth.getCurrentUser()).updateProfile(
+		await(Objects.requireNonNull(this.auth.getCurrentUser()).updateProfile(
 				new UserProfileChangeRequest.Builder().setDisplayName(displayName).build()
 		).addOnCompleteListener(activity, new OnCompleteListener<Void>() {
 			@Override
@@ -138,7 +138,7 @@ public class UserRepository {
 					Log.w("UserUpdate", "UsernameUpdate:failure", task.getException());
 				}
 			}
-		});
+		}));
 
 		try {
 			wait(1500);
@@ -167,8 +167,8 @@ public class UserRepository {
 	}
 
 
-	public User createUserWithEmailAndPassword(String _email, String _password) {
-		auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+	public User createUserWithEmailAndPassword(String _email, String _password) throws ExecutionException, InterruptedException {
+		await(auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
 			@Override
 			public void onComplete(@NonNull Task<AuthResult> task) {
 				if (task.isSuccessful()) {
@@ -179,7 +179,7 @@ public class UserRepository {
 					Log.w("EmailPassword", "signUpWithEmail:failure", task.getException());
 				}
 			}
-		});
+		}));
 
 
 		return this.getUser();
