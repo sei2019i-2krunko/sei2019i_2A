@@ -1,7 +1,6 @@
 package co.edu.unal.krunko.sitespins.dataAccess.repositories;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,15 +18,16 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutionException;
 
 import co.edu.unal.krunko.sitespins.dataAccess.models.User;
+
+import static com.google.android.gms.tasks.Tasks.await;
 
 
 public class UserRepository {
@@ -99,6 +99,7 @@ public class UserRepository {
 		}
 		return user;
 	}
+
 	public User getFacebookUser() {
 		Log.d("FacebookToken", "handleFacebookAccessToken:" + this.fbLoggedIn.getToken());
 		AuthCredential credential = FacebookAuthProvider.getCredential(this.fbLoggedIn.getToken());
@@ -147,9 +148,9 @@ public class UserRepository {
 		return this.getUser();
 	}
 
-	public User getUserByEmailAndPassword(String email, String password) {
+	public User getUserByEmailAndPassword(String email, String password) throws ExecutionException, InterruptedException {
 
-		this.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+		await(this.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
 			@Override
 			public void onComplete(@NonNull Task<AuthResult> task) {
 				if (task.isSuccessful()) {
@@ -158,7 +159,7 @@ public class UserRepository {
 					Log.w("EmailPassword", "signInWithEmail:failure", task.getException());
 				}
 			}
-		});
+		}));
 
 		Log.d("EmailPassword", "actual user " + (this.getUser() != null ? this.getUser().getUid() : "null"));
 

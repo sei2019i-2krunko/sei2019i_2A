@@ -11,6 +11,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 
+import java.util.concurrent.ExecutionException;
+
 import bolts.Task;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
@@ -40,7 +42,7 @@ public class LoginController {
 		PASSWORD_IS_REQUIRED
 	}
 
-	public LoginStatus loginWithEmailAndPassword(String email, String password) {
+	public LoginStatus loginWithEmailAndPassword(String email, String password) throws ExecutionException, InterruptedException {
 		if (email == null
 				|| !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$")) {
 			return LoginStatus.EMAIL_IS_REQUIRED_OR_INVALID;
