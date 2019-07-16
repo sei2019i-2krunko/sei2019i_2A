@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	private void login(String email, String password) {
 
-		// TODO: 16/07/19 implement LoginWithEmailAndPasswordTask :v 
+		// TODO: 16/07/19 implement LoginWithEmailAndPasswordTask :v
 	}
 
 	private void goToMainActivity() {
