@@ -41,16 +41,6 @@ public class SignupActivity extends AppCompatActivity {
 			}
 		});
 
-		_signupButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Inicializacion de pantalla de carga (LoadingActivity) para Sign-Up
-				Intent goLoading = new Intent(getApplicationContext(), LoadingActivity.class);
-				startActivity(goLoading);
-				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-			}
-		});
-
 		final String password = getResources().getString(R.string.verify_password);
 
 		_signupButton.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +85,6 @@ public class SignupActivity extends AppCompatActivity {
 			case INVALID_PASSWORD:
 				this._passwordText.setError(getResources().getString(R.string.PASSWORD_ERROR));
 				break;
-			// TODO: 3/07/19 Issue when user creates an account :'v
 			case REGISTER_SUCCESSFUL:
 				break;
 			case REGISTER_UNSUCCESSFUL:
