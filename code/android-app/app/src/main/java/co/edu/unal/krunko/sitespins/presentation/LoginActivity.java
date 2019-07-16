@@ -1,5 +1,6 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -144,9 +145,8 @@ public class LoginActivity extends AppCompatActivity {
 		}
 	}
 
-	private void login(String email, String password) {
-
-		// TODO: 16/07/19 implement LoginEmailPasswordTask :v
+	private void login(final String email, final String password) {
+		new LoginEmailPasswordTask().execute(this, email, password);
 	}
 
 	private void goToMainActivity() {
