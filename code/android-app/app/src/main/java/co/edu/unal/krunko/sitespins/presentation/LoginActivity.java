@@ -183,7 +183,10 @@ public class LoginActivity extends AppCompatActivity {
 
 			LoginController.LoginStatus loginStatus = null;
 			try {
-				loginStatus = new LoginController((Activity) objects[0]).loginWithEmailAndPassword((String) objects[1], (String) objects[2]);
+				loginStatus = new LoginController((Activity) objects[0]).loginWithEmailAndPassword(
+						(String) objects[1], //email
+						(String) objects[2]  //password
+				);
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
