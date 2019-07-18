@@ -1,18 +1,30 @@
 package co.edu.unal.krunko.sitespins.dataAccess.models;
 
+import com.google.firebase.firestore.GeoPoint;
+
 public class Pin {
 
 	private String uid;
+	private String name;
 	private String autoId;
-	private float latitude;
-	private float longitude;
+	private GeoPoint point;
 	private boolean visited;
 
-	public Pin(String uid, String autoId, float latitude, float longitude, boolean visited) {
+	// TODO: 17/07/19 add visited to firestore model
+
+	public Pin(String uid, String name, String autoId, GeoPoint point, boolean visited) {
 		this.uid = uid;
+		this.name = name;
+		this.point = point;
 		this.autoId = autoId;
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.visited = visited;
+	}
+
+	public Pin(String uid, String name, String autoId, double latitude, double longitude, boolean visited) {
+		this.uid = uid;
+		this.name = name;
+		this.point = new GeoPoint(latitude, longitude);
+		this.autoId = autoId;
 		this.visited = visited;
 	}
 
@@ -24,6 +36,14 @@ public class Pin {
 		this.uid = uid;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getAutoId() {
 		return autoId;
 	}
@@ -32,20 +52,12 @@ public class Pin {
 		this.autoId = autoId;
 	}
 
-	public float getLatitude() {
-		return latitude;
+	public GeoPoint getPoint() {
+		return point;
 	}
 
-	public void setLatitude(float latitude) {
-		this.latitude = latitude;
-	}
-
-	public float getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(float longitude) {
-		this.longitude = longitude;
+	public void setPoint(GeoPoint point) {
+		this.point = point;
 	}
 
 	public boolean isVisited() {
@@ -55,4 +67,5 @@ public class Pin {
 	public void setVisited(boolean visited) {
 		this.visited = visited;
 	}
+
 }
