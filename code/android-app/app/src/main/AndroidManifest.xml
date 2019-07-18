@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.MainActivity" />
-        <activity android:name=".presentation.SignupActivity" />
+        <activity android:name=".presentation.SignUpActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
