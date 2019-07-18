@@ -4,21 +4,18 @@ import android.app.Activity;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import co.edu.unal.krunko.sitespins.dataAccess.models.User;
-import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
-
 public class MapControllers {
 
-    private Activity activity;git
+	private Activity activity;
 
-    public MapControllers(){
-        this.activity = null;
-    }
+	public MapControllers() {
+		this.activity = null;
+	}
 
-    public LatLng markerOfTheDay(){
-        LatLng markerOfTheDay  = new LatLng(-34, 151);
-        return markerOfTheDay;
-    }
+	public LatLng markerOfTheDay() {
+		LatLng markerOfTheDay = new LatLng(4.6625352, -74.0616287);
+		return markerOfTheDay;
+	}
 
 
 }
