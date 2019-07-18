@@ -90,12 +90,11 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 		const collection_path = '/users/' + uid + '/markers/'
 		const collection_ref = db.collection(collection_path)
 
-		let doc_info: { name: string; position: GeoPoint; } | { position: GeoPoint; name?: undefined; } | { name: string; position: GeoPoint; } | { position: GeoPoint; name?: undefined; }
-
+		let doc_info: { name: string; position: GeoPoint; visited: boolean; } | { position: GeoPoint; visited: boolean; name?: undefined; } | { name: string; position: GeoPoint; visited: boolean; } | { position: GeoPoint; visited: boolean; name?: undefined; }
 		// if a non-null point was given
 		if (point) {
 			if (point instanceof GeoPoint) {
-				doc_info = name ? { name: name, position: point } : { position: point }
+				doc_info = name ? { name: name, position: point, visited: false } : { position: point, visited: false }
 
 				// it creates a document with an auto-id
 				return collection_ref.add(doc_info).catch(error => {
@@ -116,10 +115,13 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 			if (typeof latitude === 'number' && typeof longitude === 'number') {
 				point = new GeoPoint(latitude, longitude)
 
-				doc_info = name ? { name: name, position: point } : { position: point }
+				doc_info = name ? { name: name, position: point, visited: false } : { position: point, visited: false }
 
 				// it creates a document with an auto-id
-				return collection_ref.add(doc_info).catch(error => {
+				return collection_ref.add(doc_info).then((value) => {
+					console.log('[Save new map point] Document created', value.path)
+					console.log('[Save new map point] Document id:', value.id)
+				}).catch(error => {
 
 					console.error('[Save new map point] latitude:', latitude)
 					console.error('[Save new map point] longitude:', longitude)
@@ -131,6 +133,7 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 				})
 			}
 		}
+
 		console.error('[Save new map point] Invalid arguments were given')
 		console.error('[Save new map point] point:', point)
 		console.error('[Save new map point] latitude:', latitude)
@@ -138,5 +141,6 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 		return false
 	}
 
+	console.error('[Save new map point] User\'s id is not valid', uid)
 	return false
 })

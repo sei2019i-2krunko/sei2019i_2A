@@ -10,7 +10,6 @@ public class Pin {
 	private GeoPoint point;
 	private boolean visited;
 
-	// TODO: 17/07/19 add visited to firestore model
 
 	public Pin(String uid, String name, String autoId, GeoPoint point, boolean visited) {
 		this.uid = uid;
