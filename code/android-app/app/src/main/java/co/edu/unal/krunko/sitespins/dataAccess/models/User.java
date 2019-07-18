@@ -90,7 +90,7 @@ public class User {
 		);
 	}
 
-	public static User fromGoogleUser(GoogleSignInAccount account){
+	public static User fromGoogleUser(GoogleSignInAccount account) {
 		return account == null ? null : new User(
 				account.getId(),
 				account.getDisplayName(),

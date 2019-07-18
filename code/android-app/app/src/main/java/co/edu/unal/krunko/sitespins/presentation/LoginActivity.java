@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 import co.edu.unal.krunko.sitespins.R;
 import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
 
+
 public class LoginActivity extends AppCompatActivity {
 
 	private static final int REQUEST_SIGNUP = 0;
@@ -38,11 +39,11 @@ public class LoginActivity extends AppCompatActivity {
 	EditText _passwordText;
 
 	Button _loginButton;
-	Button _anonimoButton;
+	Button _anonymousButton;
 	LoginButton _facebookButton;
 	SignInButton _signInGoogle;
 
-	TextView _signupLink;
+	TextView _signUpLink;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +67,12 @@ public class LoginActivity extends AppCompatActivity {
 		FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
 		initViews();
 
-		_signupLink.setOnClickListener(new View.OnClickListener() {
+		_signUpLink.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// Iniciar el Activity de Sign-Up
-				Intent goSignup = new Intent(getApplicationContext(), SignupActivity.class);
+				Intent goSignup = new Intent(getApplicationContext(), SignUpActivity.class);
 				startActivityForResult(goSignup, REQUEST_SIGNUP);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
@@ -91,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 
-		_anonimoButton.setOnClickListener(new View.OnClickListener() {
+		_anonymousButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				goToMapsActivity();
@@ -167,9 +168,9 @@ public class LoginActivity extends AppCompatActivity {
 		_passwordText = findViewById(R.id.input_password);
 
 		_loginButton = findViewById(R.id.btn_login);
-		_anonimoButton = findViewById(R.id.btn_login_A);
+		_anonymousButton = findViewById(R.id.btn_login_A);
 
-		_signupLink = findViewById(R.id.link_signup);
+		_signUpLink = findViewById(R.id.link_signup);
 		_facebookButton = (LoginButton) findViewById(R.id.btn_login_FB);
 		_signInGoogle = findViewById(R.id.btn_login_G);
 

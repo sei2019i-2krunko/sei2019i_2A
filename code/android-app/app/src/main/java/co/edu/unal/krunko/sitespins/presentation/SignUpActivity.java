@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 import co.edu.unal.krunko.sitespins.R;
 import co.edu.unal.krunko.sitespins.businessLogic.RegisterController;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
 	EditText _nameText;
 	EditText _emailText;
@@ -49,24 +50,16 @@ public class SignupActivity extends AppCompatActivity {
 			}
 		});
 
-		final String password = getResources().getString(R.string.verify_password);
 
 		_signUpButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (passwordsMatch()) {
-					createAccount(
-							_nameText.getText().toString(),
-							_emailText.getText().toString(),
-							_passwordText.getText().toString()
-					);
-				} else {
-					Toast.makeText(
-							getApplicationContext(),
-							password,
-							Toast.LENGTH_SHORT).show();
-					_reEnterPasswordText.setError("Las contraseñas no coinciden");
-				}
+				createAccount(
+						_nameText.getText().toString(),
+						_emailText.getText().toString(),
+						_passwordText.getText().toString(),
+						_reEnterPasswordText.getText().toString()
+				);
 			}
 
 		});
@@ -74,13 +67,14 @@ public class SignupActivity extends AppCompatActivity {
 
 	}
 
-	private boolean passwordsMatch() {
-		return _passwordText.getText().toString().equals(_reEnterPasswordText.getText().toString());
-
-	}
-
-	private void createAccount(String name, String email, String password) {
-		// TODO: 16/07/19 implement RegisterEmailPasswordTask
+	private void createAccount(String name, String email, String password, String verify_password) {
+		new RegisterEmailPasswordTask().execute(
+				this,
+				name,
+				email,
+				password,
+				verify_password
+		);
 	}
 
 
@@ -106,8 +100,10 @@ public class SignupActivity extends AppCompatActivity {
 				registerStatus = new RegisterController((Activity) (objects[0])).registerWithEmailAndPassword(
 						(String) objects[1], //name
 						(String) objects[2], //email
-						(String) objects[3]  //password
+						(String) objects[3], //password
+						(String) objects[4]  //verification password
 				);
+
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -133,11 +129,11 @@ public class SignupActivity extends AppCompatActivity {
 	protected void onPostExecute(RegisterController.RegisterStatus registerStatus) {
 		switch (registerStatus) {
 			case REGISTER_UNSUCCESSFUL:
-				Toast.makeText(this, "Error while creating user", Toast.LENGTH_SHORT).show();
+				// we must display an error :u
 				break;
 
 			case REGISTER_SUCCESSFUL:
-				Toast.makeText(this, "User has been registered", Toast.LENGTH_LONG).show();
+				// do nothing (there is an auth listener we do not have to worry at this point)
 				break;
 
 			case INVALID_EMAIL:
@@ -156,8 +152,12 @@ public class SignupActivity extends AppCompatActivity {
 				Toast.makeText(this, "User's name has not been updated", Toast.LENGTH_SHORT).show();
 				break;
 
+			case PASSWORDS_DO_NOT_MATCH:
+				_reEnterPasswordText.setError("Las contraseñas no coinciden");
+				break;
+
 			default:
-				Toast.makeText(this, "Unexpected status " + registerStatus.name(), Toast.LENGTH_SHORT).show();
+				Log.d("RegisterEmailPassword", "Unexpected status " + registerStatus.name());
 				break;
 		}
 	}

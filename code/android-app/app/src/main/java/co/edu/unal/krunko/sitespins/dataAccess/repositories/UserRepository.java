@@ -71,6 +71,10 @@ public class UserRepository {
 		return this.user;
 	}
 
+	public static User getCurrentUser() {
+		return User.fromFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
+	}
+
 	public User getGoogleUser(Task<GoogleSignInAccount> completedTask) {
 		try {
 			final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -124,7 +128,7 @@ public class UserRepository {
 	public User updateCurrentUserName(String displayName) throws ExecutionException, InterruptedException {
 
 		if (this.getUser() == null) {
-			return null;
+			throw new NullPointerException();
 		}
 
 		await(Objects.requireNonNull(this.auth.getCurrentUser()).updateProfile(
@@ -133,18 +137,13 @@ public class UserRepository {
 			@Override
 			public void onComplete(@NonNull Task<Void> task) {
 				if (task.isSuccessful()) {
-					Log.d("UserUpdate", "UsernameUpdate:success");
+					Log.d("UserUpdate", "UsernameUpdate:success - User's name: " + getUser().getDisplayName());
 				} else {
 					Log.w("UserUpdate", "UsernameUpdate:failure", task.getException());
 				}
 			}
 		}));
 
-		try {
-			wait(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		return this.getUser();
 	}
 
