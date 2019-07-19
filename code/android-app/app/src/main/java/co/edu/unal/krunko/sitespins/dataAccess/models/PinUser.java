@@ -6,12 +6,29 @@ public class PinUser extends Pin {
 
 	private boolean visited;
 
+
+	/**
+	 * This method set by default visited to false.
+	 *
+	 * @param owner   User's id.
+	 * @param name    Pin's name.
+	 * @param autoId  Pin's id in Firebase.
+	 * @param comment Pin's comment.
+	 * @param point   Pin's location.
+	 */
 	public PinUser(String owner, String name, String autoId, String comment, GeoPoint point) {
-		super(owner, name, autoId, comment, point);
-		this.visited = false;
+		this(owner, name, autoId, comment, point, false);
 	}
 
-	public PinUser(String owner, String name, String autoId, String comment, GeoPoint point, boolean visited) {
+	/**
+	 * @param owner   User's id.
+	 * @param name    Pin's name.
+	 * @param autoId  Pin's id in Firebase.
+	 * @param comment Pin's comment.
+	 * @param point   Pin's location.
+	 * @param visited Pin's visited state.
+	 */
+	private PinUser(String owner, String name, String autoId, String comment, GeoPoint point, boolean visited) {
 		super(owner, name, autoId, comment, point);
 		this.visited = visited;
 	}
