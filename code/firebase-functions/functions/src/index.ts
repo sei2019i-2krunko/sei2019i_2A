@@ -132,15 +132,15 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 					//if name was given we attach it
 					if (name) {
 						if (comment) {
-							doc_info = { name, comment, point, visited: false }
+							doc_info = {owner, name, comment, point, visited: false }
 						} else {
-							doc_info = { name, point, visited: false }
+							doc_info = {owner, name, point, visited: false }
 						}
 					} else {
 						if (comment) {
-							doc_info = { comment, point, visited: false }
+							doc_info = {owner, comment, point, visited: false }
 						} else {
-							doc_info = { point, visited: false }
+							doc_info = {owner, point, visited: false }
 						}
 					}
 
@@ -163,15 +163,15 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 							//if name was given we attach it
 							if (name) {
 								if (comment) {
-									doc_info = { owner, name, comment, point, visited: false, NEBound, SWBound }
+									doc_info = { owner, name, comment, point, NEBound, SWBound }
 								} else {
-									doc_info = { owner, name: name, point, visited: false, NEBound, SWBound }
+									doc_info = { owner, name: name, point, NEBound, SWBound }
 								}
 							} else {
 								if (comment) {
-									doc_info = { owner, comment: comment, point, visited: false, NEBound, SWBound }
+									doc_info = { owner, comment: comment, NEBound, SWBound }
 								} else {
-									doc_info = { owner, point, visited: false, NEBound, SWBound }
+									doc_info = { owner, point, NEBound, SWBound }
 								}
 							}
 
