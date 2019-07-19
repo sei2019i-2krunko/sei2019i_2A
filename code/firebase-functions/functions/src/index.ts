@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions'
 import admin = require('firebase-admin')
-import { GeoPoint } from '@google-cloud/firestore';
+import { GeoPoint, DocumentReference } from '@google-cloud/firestore';
+import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
 admin.initializeApp(functions.config().firebase)
 
@@ -78,78 +79,110 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 
 	const latitude: number = data.latitude || null
 	const longitude: number = data.longitude || null
-
 	const name: string = data.name || null
+	const comment: string = data.comment || null
+
+	// admin purposes only
+	const NEBound: GeoPoint = data.NEBound || null
+	const SWBound: GeoPoint = data.SWBound || null
+	const owner: string = uid
 
 	// if it is a valid user
 	if (!context.auth) {
 
-		//marker's user collection
-		const collection_path = '/users/' + uid + '/markers/'
-		const collection_ref = db.collection(collection_path)
+		let doc_info: any
+		let user_info: DocumentReference | DocumentSnapshot = db.doc(`/users/${uid}`)
 
-		let doc_info: { name: string; position: GeoPoint; visited: boolean; } | { position: GeoPoint; visited: boolean; name?: undefined; } | { name: string; position: GeoPoint; visited: boolean; } | { position: GeoPoint; visited: boolean; name?: undefined; }
 
-		// if a non-null point was given
-		if (point) {
-			if (point instanceof GeoPoint) {
-				doc_info = name ? { name: name, position: point, visited: false } : { position: point, visited: false }
+		// we try to get the user's documet
+		return user_info.get().then((doc) => {
+			user_info = doc
 
-				// it creates a document with an auto-id
-				return collection_ref.add(doc_info).then((value) => {
-					console.log('[Save new map point] Document created', value.path)
-					console.log('[Save new map point] Document id:', value.id)
+			//we check if the user has a document
+			if (user_info.exists) {
 
-					return { autoId: value.id }
-				}).catch((error) => {
+				//we check if the user is not admin
+				if (!user_info.data().admin) {
 
-					console.error('[Save new map point] latitude:', point.latitude)
-					console.error('[Save new map point] longitude:', point.longitude)
+					//marker's user collection
+					const collection_path = `/users/${uid}/pins/`
+					const collection_ref = db.collection(collection_path)
 
-					console.error(
-						'[Save new map point] There was a problem at trying to create the document',
-						'\nWith error:', error
-					)
+					// if a non-null point or latitude and longitude arguments were given
+					if (point || (latitude && longitude)) {
 
-					throw new functions.https.HttpsError('internal', 'There was an error creating the document. Error: ' + error)
-				})
+						// if point was not given
+						if (!(point instanceof GeoPoint) && typeof latitude === 'number' && typeof longitude === 'number') {
+							console.log('[Save new map point] point was not given but latitude and longitud were.')
+							point = new GeoPoint(latitude, longitude)
+						}
+
+					} else {
+						console.error('[Save new map point] Invalid arguments were given')
+						console.error('[Save new map point] point:', point)
+						console.error('[Save new map point] latitude:', latitude)
+						console.error('[Save new map point] longitude:', longitude)
+
+						throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+							'one arguments "point" containing the GeoPoint or arguments "latitude" and "longitude"')
+
+					}
+
+					//if name was given we attach it
+
+					if (name) {
+						if (comment) {
+							doc_info = { name: name, comment: comment, point: point, visited: false }
+						} else {
+							doc_info = { name: name, point: point, visited: false }
+						}
+					} else {
+						if (comment) {
+							doc_info = { comment: comment, point: point, visited: false }
+						} else {
+							doc_info = { point: point, visited: false }
+						}
+					}
+
+					// it creates a document with an auto-id
+					return collection_ref.add(doc_info).then((value) => {
+						console.log('[Save new map point] Document created in path:', value.path)
+						console.log('[Save new map point] Document id:', value.id)
+
+						return { autoId: value.id }
+					}).catch((error) => {
+
+						console.error('[Save new map point] latitude:', point.latitude)
+						console.error('[Save new map point] longitude:', point.longitude)
+
+						console.error('[Save new map point] There was a problem at trying to create the document')
+
+						console.error(error)
+
+
+						throw new functions.https.HttpsError('internal', 'There was an error creating the document. Error: ' + error)
+					})
+				}
+
+				else {
+					//TODO: implement for admin
+					throw new functions.https.HttpsError('unimplemented', 'admin can not create a pin yet')
+				}
 			}
 
-		}
-
-		// if a non-null latitude and longitude were given
-		else if (latitude && longitude) {
-			if (typeof latitude === 'number' && typeof longitude === 'number') {
-				point = new GeoPoint(latitude, longitude)
-
-				doc_info = name ? { name: name, position: point, visited: false } : { position: point, visited: false }
-
-				// it creates a document with an auto-id
-				return collection_ref.add(doc_info).then((value) => {
-					console.log('[Save new map point] Document created', value.path)
-					console.log('[Save new map point] Document id:', value.id)
-
-					return { autoId: value.id }
-				}).catch(error => {
-
-					console.error('[Save new map point] latitude:', latitude)
-					console.error('[Save new map point] longitude:', longitude)
-
-					console.error(
-						'[Save new map point] There was a problem at trying to create the document',
-						'\nWith error:', error
-					)
-				})
+			//if user's document does not exist
+			else {
+				throw new functions.https.HttpsError('not-found', `User\'s document was not found with uid: ${uid}`)
 			}
-		}
-
-		console.error('[Save new map point] Invalid arguments were given')
-		console.error('[Save new map point] point:', point)
-		console.error('[Save new map point] latitude:', latitude)
-		console.error('[Save new map point] longitude:', longitude)
-
-		throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-			'one arguments "point" containing the geo text to add or arguments "latitude" and "longitude"')
+			
+			//if an error ocurred while getting user's document
+		}).catch((error) => {
+			throw new functions.https.HttpsError(
+				'unknown',
+				`There was an error while getting document /users/${uid}`,
+				error
+			)
+		})
 	}
 
 	console.error('[Save new map point] User\'s id is not valid', uid)
