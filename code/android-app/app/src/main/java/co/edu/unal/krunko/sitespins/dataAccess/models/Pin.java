@@ -2,37 +2,20 @@ package co.edu.unal.krunko.sitespins.dataAccess.models;
 
 import com.google.firebase.firestore.GeoPoint;
 
-public class Pin {
+public abstract class Pin {
 
-	private String uid;
 	private String name;
+	private String owner;
 	private String autoId;
+	private String comment;
 	private GeoPoint point;
-	private boolean visited;
 
-
-	public Pin(String uid, String name, String autoId, GeoPoint point, boolean visited) {
-		this.uid = uid;
+	Pin(String owner, String name, String autoId, String comment, GeoPoint point) {
+		this.owner = owner;
 		this.name = name;
+		this.autoId = autoId;
+		this.comment = comment;
 		this.point = point;
-		this.autoId = autoId;
-		this.visited = visited;
-	}
-
-	public Pin(String uid, String name, String autoId, double latitude, double longitude, boolean visited) {
-		this.uid = uid;
-		this.name = name;
-		this.point = new GeoPoint(latitude, longitude);
-		this.autoId = autoId;
-		this.visited = visited;
-	}
-
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
 	}
 
 	public String getName() {
@@ -43,12 +26,28 @@ public class Pin {
 		this.name = name;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 	public String getAutoId() {
 		return autoId;
 	}
 
 	public void setAutoId(String autoId) {
 		this.autoId = autoId;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public GeoPoint getPoint() {
@@ -58,13 +57,4 @@ public class Pin {
 	public void setPoint(GeoPoint point) {
 		this.point = point;
 	}
-
-	public boolean isVisited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
-	}
-
 }
