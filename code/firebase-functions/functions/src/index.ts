@@ -160,7 +160,7 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 						console.error(error)
 
 
-						throw new functions.https.HttpsError('internal', 'There was an error creating the document. Error: ' + error)
+						throw new functions.https.HttpsError('unknown', 'There was an error creating the document', error)
 					})
 				}
 
@@ -174,7 +174,7 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 			else {
 				throw new functions.https.HttpsError('not-found', `User\'s document was not found with uid: ${uid}`)
 			}
-			
+
 			//if an error ocurred while getting user's document
 		}).catch((error) => {
 			throw new functions.https.HttpsError(
