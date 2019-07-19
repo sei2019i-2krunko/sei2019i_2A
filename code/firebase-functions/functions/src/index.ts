@@ -71,9 +71,7 @@ exports.delete_user_document = functions.auth.user().onDelete((user, context) =>
 exports.save_new_geo_point = functions.https.onCall((data, context) => {
 	console.log('[Save new map point] Function has been called.')
 
-	const uid = context.auth.uid
-
-
+	const uid = context.auth.uid || null
 
 	// we verify if the user has passed as argument the point or latitute and longitude
 	let point: GeoPoint = data.point || null
@@ -84,20 +82,26 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 	const name: string = data.name || null
 
 	// if it is a valid user
-	if (uid) {
+	if (!context.auth) {
 
 		//marker's user collection
 		const collection_path = '/users/' + uid + '/markers/'
 		const collection_ref = db.collection(collection_path)
 
 		let doc_info: { name: string; position: GeoPoint; visited: boolean; } | { position: GeoPoint; visited: boolean; name?: undefined; } | { name: string; position: GeoPoint; visited: boolean; } | { position: GeoPoint; visited: boolean; name?: undefined; }
+
 		// if a non-null point was given
 		if (point) {
 			if (point instanceof GeoPoint) {
 				doc_info = name ? { name: name, position: point, visited: false } : { position: point, visited: false }
 
 				// it creates a document with an auto-id
-				return collection_ref.add(doc_info).catch(error => {
+				return collection_ref.add(doc_info).then((value) => {
+					console.log('[Save new map point] Document created', value.path)
+					console.log('[Save new map point] Document id:', value.id)
+
+					return { autoId: value.id }
+				}).catch((error) => {
 
 					console.error('[Save new map point] latitude:', point.latitude)
 					console.error('[Save new map point] longitude:', point.longitude)
@@ -106,10 +110,13 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 						'[Save new map point] There was a problem at trying to create the document',
 						'\nWith error:', error
 					)
+
+					throw new functions.https.HttpsError('internal', 'There was an error creating the document. Error: ' + error)
 				})
 			}
 
 		}
+
 		// if a non-null latitude and longitude were given
 		else if (latitude && longitude) {
 			if (typeof latitude === 'number' && typeof longitude === 'number') {
@@ -121,6 +128,8 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 				return collection_ref.add(doc_info).then((value) => {
 					console.log('[Save new map point] Document created', value.path)
 					console.log('[Save new map point] Document id:', value.id)
+
+					return { autoId: value.id }
 				}).catch(error => {
 
 					console.error('[Save new map point] latitude:', latitude)
@@ -138,9 +147,13 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 		console.error('[Save new map point] point:', point)
 		console.error('[Save new map point] latitude:', latitude)
 		console.error('[Save new map point] longitude:', longitude)
-		return false
+
+		throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+			'one arguments "point" containing the geo text to add or arguments "latitude" and "longitude"')
 	}
 
 	console.error('[Save new map point] User\'s id is not valid', uid)
-	return false
+	throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+		'while authenticated.');
+
 })
