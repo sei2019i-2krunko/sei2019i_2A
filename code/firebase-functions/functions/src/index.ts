@@ -104,7 +104,7 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 				//we check if the user is not admin
 				if (!user_info.data().admin) {
 
-					//marker's user collection
+					//pins's user collection
 					const collection_path = `/users/${uid}/pins/`
 					const collection_ref = db.collection(collection_path)
 
@@ -129,18 +129,17 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 					}
 
 					//if name was given we attach it
-
 					if (name) {
 						if (comment) {
-							doc_info = { name: name, comment: comment, point: point, visited: false }
+							doc_info = { name, comment, point, visited: false }
 						} else {
-							doc_info = { name: name, point: point, visited: false }
+							doc_info = { name, point, visited: false }
 						}
 					} else {
 						if (comment) {
-							doc_info = { comment: comment, point: point, visited: false }
+							doc_info = { comment, point, visited: false }
 						} else {
-							doc_info = { point: point, visited: false }
+							doc_info = { point, visited: false }
 						}
 					}
 
@@ -165,8 +164,67 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 				}
 
 				else {
-					//TODO: implement for admin
-					throw new functions.https.HttpsError('unimplemented', 'admin can not create a pin yet')
+					//pins's admin collection
+					const collection_path = `/global-pins/`
+					const collection_ref = db.collection(collection_path)
+
+					if (NEBound && SWBound && NEBound instanceof GeoPoint && SWBound instanceof GeoPoint) {
+						if (point || (latitude && longitude)) {
+
+							// if point was not given
+							if (!(point instanceof GeoPoint) && typeof latitude === 'number' && typeof longitude === 'number') {
+								console.log('[Save new map point] point was not given but latitude and longitud were.')
+								point = new GeoPoint(latitude, longitude)
+							}
+
+							//if name was given we attach it
+							if (name) {
+								if (comment) {
+									doc_info = { owner, name, comment, point, visited: false, NEBound, SWBound }
+								} else {
+									doc_info = { owner, name: name, point, visited: false, NEBound, SWBound }
+								}
+							} else {
+								if (comment) {
+									doc_info = { owner, comment: comment, point, visited: false, NEBound, SWBound }
+								} else {
+									doc_info = { owner, point, visited: false, NEBound, SWBound }
+								}
+							}
+
+							// it creates a document with an auto-id
+							return collection_ref.add(doc_info).then((value) => {
+								console.log('[Save new map point] Document created in path:', value.path)
+								console.log('[Save new map point] Document id:', value.id)
+
+								return { autoId: value.id }
+							}).catch((error) => {
+								console.error('[Save new map point] latitude:', point.latitude)
+								console.error('[Save new map point] longitude:', point.longitude)
+								console.error('[Save new map point] There was a problem at trying to create the document')
+
+								console.error(error)
+
+								throw new functions.https.HttpsError('unknown', 'There was an error creating the document', error)
+							})
+
+						} else {
+							console.error('[Save new map point] Invalid arguments were given')
+							console.error('[Save new map point] point:', point)
+							console.error('[Save new map point] latitude:', latitude)
+							console.error('[Save new map point] longitude:', longitude)
+
+							throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+								'one arguments "point" containing the GeoPoint or arguments "latitude" and "longitude"')
+
+						}
+					} else {
+						console.error('[Save new map point] Argument(s) was/were not provided.')
+						console.error('[Save new map point] Admin has not provided North-East boundary and/or South-West boundary.')
+
+						throw new functions.https.HttpsError('invalid-argument', 'Admin has to provide North-East boundary and South-West boundary')
+					}
+
 				}
 			}
 
