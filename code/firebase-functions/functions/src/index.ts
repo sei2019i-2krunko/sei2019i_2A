@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions'
 import admin = require('firebase-admin')
-import { GeoPoint, DocumentReference } from '@google-cloud/firestore';
+import { GeoPoint, DocumentReference, CollectionReference } from '@google-cloud/firestore';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
 admin.initializeApp(functions.config().firebase)
@@ -90,23 +90,24 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 	// if it is a valid user
 	if (!context.auth) {
 
-		let doc_info: any
 		let user_info: DocumentReference | DocumentSnapshot = db.doc(`/users/${uid}`)
-
 
 		// we try to get the user's documet
 		return user_info.get().then((doc) => {
+			let doc_info: any
 			user_info = doc
 
 			//we check if the user has a document
 			if (user_info.exists) {
+
+				let collection_ref: CollectionReference
 
 				//we check if the user is not admin
 				if (!user_info.data().admin) {
 
 					//pins's user collection
 					const collection_path = `/users/${uid}/pins/`
-					const collection_ref = db.collection(collection_path)
+					collection_ref = db.collection(collection_path)
 
 					// if a non-null point or latitude and longitude arguments were given
 					if (point || (latitude && longitude)) {
@@ -143,30 +144,12 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 						}
 					}
 
-					// it creates a document with an auto-id
-					return collection_ref.add(doc_info).then((value) => {
-						console.log('[Save new map point] Document created in path:', value.path)
-						console.log('[Save new map point] Document id:', value.id)
-
-						return { autoId: value.id }
-					}).catch((error) => {
-
-						console.error('[Save new map point] latitude:', point.latitude)
-						console.error('[Save new map point] longitude:', point.longitude)
-
-						console.error('[Save new map point] There was a problem at trying to create the document')
-
-						console.error(error)
-
-
-						throw new functions.https.HttpsError('unknown', 'There was an error creating the document', error)
-					})
 				}
 
 				else {
 					//pins's admin collection
 					const collection_path = `/global-pins/`
-					const collection_ref = db.collection(collection_path)
+					collection_ref = db.collection(collection_path)
 
 					if (NEBound && SWBound && NEBound instanceof GeoPoint && SWBound instanceof GeoPoint) {
 						if (point || (latitude && longitude)) {
@@ -192,22 +175,6 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 								}
 							}
 
-							// it creates a document with an auto-id
-							return collection_ref.add(doc_info).then((value) => {
-								console.log('[Save new map point] Document created in path:', value.path)
-								console.log('[Save new map point] Document id:', value.id)
-
-								return { autoId: value.id }
-							}).catch((error) => {
-								console.error('[Save new map point] latitude:', point.latitude)
-								console.error('[Save new map point] longitude:', point.longitude)
-								console.error('[Save new map point] There was a problem at trying to create the document')
-
-								console.error(error)
-
-								throw new functions.https.HttpsError('unknown', 'There was an error creating the document', error)
-							})
-
 						} else {
 							console.error('[Save new map point] Invalid arguments were given')
 							console.error('[Save new map point] point:', point)
@@ -220,12 +187,28 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 						}
 					} else {
 						console.error('[Save new map point] Argument(s) was/were not provided.')
-						console.error('[Save new map point] Admin has not provided North-East boundary and/or South-West boundary.')
+						console.error('[Save new map point] Admin has not provided North-East boundary and/or South-West boundaries.')
 
-						throw new functions.https.HttpsError('invalid-argument', 'Admin has to provide North-East boundary and South-West boundary')
+						throw new functions.https.HttpsError('invalid-argument', 'Admin has to provide North-East boundary and South-West boundaries.')
 					}
 
 				}
+
+				// it creates a document with an auto-id
+				return collection_ref.add(doc_info).then((value) => {
+					console.log('[Save new map point] Document created in path:', value.path)
+					console.log('[Save new map point] Document id:', value.id)
+
+					return { autoId: value.id }
+				}).catch((error) => {
+					console.error('[Save new map point] latitude:', point.latitude)
+					console.error('[Save new map point] longitude:', point.longitude)
+					console.error('[Save new map point] There was a problem at trying to create the document')
+
+					console.error(error)
+
+					throw new functions.https.HttpsError('unknown', 'There was an error creating the document', error)
+				})
 			}
 
 			//if user's document does not exist
