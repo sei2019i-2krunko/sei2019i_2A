@@ -19,9 +19,11 @@ import static com.google.android.gms.tasks.Tasks.await;
 public class PinRepository {
 
 	private FirebaseFunctions functions;
+	private String uid;
 
 	public PinRepository() {
 		this.functions = FirebaseFunctions.getInstance();
+		this.uid = UserRepository.getCurrentUser().getUid();
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class PinRepository {
 			throw new NullPointerException("Pin's id in database is invalid or null.");
 		}
 
-		return new PinUser(UserRepository.getCurrentUser().getUid(), null, autoId, null, point);
+		return new PinUser(this.uid, null, autoId, null, point);
 	}
 
 	/**
@@ -68,8 +70,36 @@ public class PinRepository {
 	 * @param point Pin's location.
 	 * @return A Pin instance with the parameters given with its id in Firebase.
 	 */
-	public PinUser createNewPin(String name, GeoPoint point) {
-		return null;
+	public PinUser createNewPin(String name, GeoPoint point) throws ExecutionException, InterruptedException, NullPointerException {
+		HashMap<String, Object> parameters = new HashMap<>();
+		String autoId;
+
+		parameters.put("name", name);
+		parameters.put("point", point);
+
+		autoId = (String) await(
+				this.functions.getHttpsCallable("save_new_geo_point")
+						.call(parameters)
+						.continueWith(new Continuation<HttpsCallableResult, Object>() {
+							@Override
+							public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+								HttpsCallableResult result = task.getResult();
+
+								if (result != null) {
+									Map<String, Object> values = (Map<String, Object>) result.getData();
+									return values.get("autoId");
+								}
+								return null;
+							}
+						})
+		);
+
+		if (autoId == null) {
+			throw new NullPointerException("Pin's id in database is invalid or null.");
+		}
+
+
+		return new PinUser(this.uid, name, autoId, null, point);
 	}
 
 	/**
@@ -79,8 +109,36 @@ public class PinRepository {
 	 * @param longitude Pin's longitude coordinate.
 	 * @return A Pin instance with the parameters given with its id in Firebase.
 	 */
-	public PinUser createNewPin(double latitude, double longitude) {
-		return null;
+	public PinUser createNewPin(double latitude, double longitude) throws ExecutionException, InterruptedException, NullPointerException {
+		HashMap<String, Object> parameters = new HashMap<>();
+		String autoId;
+
+		parameters.put("latitude", latitude);
+		parameters.put("longitude", longitude);
+
+		autoId = (String) await(
+				this.functions.getHttpsCallable("save_new_geo_point")
+						.call(parameters)
+						.continueWith(new Continuation<HttpsCallableResult, Object>() {
+							@Override
+							public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+								HttpsCallableResult result = task.getResult();
+
+								if (result != null) {
+									Map<String, Object> values = (Map<String, Object>) result.getData();
+									return values.get("autoId");
+								}
+								return null;
+							}
+						})
+		);
+
+		if (autoId == null) {
+			throw new NullPointerException("Pin's id in database is invalid or null.");
+		}
+
+
+		return new PinUser(this.uid, null, autoId, null, new GeoPoint(latitude, longitude));
 	}
 
 	/**
@@ -91,8 +149,37 @@ public class PinRepository {
 	 * @param longitude Pin's longitude coordinate.
 	 * @return A Pin instance with the parameters given with its id in Firebase.
 	 */
-	public PinUser createNewPin(String name, double latitude, double longitude) {
-		return null;
+	public PinUser createNewPin(String name, double latitude, double longitude) throws ExecutionException, InterruptedException, NullPointerException {
+		HashMap<String, Object> parameters = new HashMap<>();
+		String autoId;
+
+		parameters.put("name", name);
+		parameters.put("latitude", latitude);
+		parameters.put("longitude", longitude);
+
+		autoId = (String) await(
+				this.functions.getHttpsCallable("save_new_geo_point")
+						.call(parameters)
+						.continueWith(new Continuation<HttpsCallableResult, Object>() {
+							@Override
+							public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+								HttpsCallableResult result = task.getResult();
+
+								if (result != null) {
+									Map<String, Object> values = (Map<String, Object>) result.getData();
+									return values.get("autoId");
+								}
+								return null;
+							}
+						})
+		);
+
+		if (autoId == null) {
+			throw new NullPointerException("Pin's id in database is invalid or null.");
+		}
+
+
+		return new PinUser(this.uid, name, autoId, null, new GeoPoint(latitude, longitude));
 	}
 
 	/**
@@ -103,8 +190,37 @@ public class PinRepository {
 	 * @param comment Pin's comment.
 	 * @return A Pin instance with the parameters given with its id in Firebase.
 	 */
-	public PinUser createNewPin(String name, GeoPoint point, String comment) {
-		return null;
+	public PinUser createNewPin(String name, GeoPoint point, String comment) throws ExecutionException, InterruptedException, NullPointerException {
+		HashMap<String, Object> parameters = new HashMap<>();
+		String autoId;
+
+		parameters.put("name", name);
+		parameters.put("point", point);
+		parameters.put("comment", comment);
+
+		autoId = (String) await(
+				this.functions.getHttpsCallable("save_new_geo_point")
+						.call(parameters)
+						.continueWith(new Continuation<HttpsCallableResult, Object>() {
+							@Override
+							public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+								HttpsCallableResult result = task.getResult();
+
+								if (result != null) {
+									Map<String, Object> values = (Map<String, Object>) result.getData();
+									return values.get("autoId");
+								}
+								return null;
+							}
+						})
+		);
+
+		if (autoId == null) {
+			throw new NullPointerException("Pin's id in database is invalid or null.");
+		}
+
+
+		return new PinUser(this.uid, name, autoId, comment, point);
 	}
 
 	/**
@@ -116,8 +232,38 @@ public class PinRepository {
 	 * @param comment   Pin's comment.
 	 * @return A Pin instance with the parameters given with its id in Firebase.
 	 */
-	public PinUser createNewPin(String name, double latitude, double longitude, String comment) {
-		return null;
+	public PinUser createNewPin(String name, double latitude, double longitude, String comment) throws ExecutionException, InterruptedException, NullPointerException {
+		HashMap<String, Object> parameters = new HashMap<>();
+		String autoId;
+
+		parameters.put("name", name);
+		parameters.put("comment", comment);
+		parameters.put("latitude", latitude);
+		parameters.put("longitude", longitude);
+
+		autoId = (String) await(
+				this.functions.getHttpsCallable("save_new_geo_point")
+						.call(parameters)
+						.continueWith(new Continuation<HttpsCallableResult, Object>() {
+							@Override
+							public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+								HttpsCallableResult result = task.getResult();
+
+								if (result != null) {
+									Map<String, Object> values = (Map<String, Object>) result.getData();
+									return values.get("autoId");
+								}
+								return null;
+							}
+						})
+		);
+
+		if (autoId == null) {
+			throw new NullPointerException("Pin's id in database is invalid or null.");
+		}
+
+
+		return new PinUser(this.uid, name, autoId, comment, new GeoPoint(latitude, longitude));
 	}
 
 }
