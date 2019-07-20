@@ -12,7 +12,7 @@ public abstract class Pin {
 	private String comment;
 	private GeoPoint point;
 
-	Pin(@NonNull String owner, String name, @NonNull String autoId, String comment, GeoPoint point) {
+	Pin(@NonNull String owner, String name, @NonNull String autoId, String comment, @NonNull GeoPoint point) {
 		this.owner = owner;
 		this.name = name;
 		this.autoId = autoId;
