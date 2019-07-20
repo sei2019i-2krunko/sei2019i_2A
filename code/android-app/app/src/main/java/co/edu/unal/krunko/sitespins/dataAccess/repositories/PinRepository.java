@@ -28,7 +28,7 @@ public class PinRepository {
 
 	/**
 	 * This method only works for non-admin users.
-	 * It calls the cloud function save_new_geo_point which returns the document id of the Pin created in Firebase.
+	 * It calls the cloud function save_new_pin which returns the document id of the Pin created in Firebase.
 	 *
 	 * @param point Pin's location.
 	 * @return A Pin instance with the parameters given with its id in Firebase.
@@ -40,7 +40,7 @@ public class PinRepository {
 		parameters.put("point", point);
 
 		autoId = (String) await(
-				this.functions.getHttpsCallable("save_new_geo_point")
+				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
 						.continueWith(new Continuation<HttpsCallableResult, Object>() {
 							@Override
@@ -78,7 +78,7 @@ public class PinRepository {
 		parameters.put("point", point);
 
 		autoId = (String) await(
-				this.functions.getHttpsCallable("save_new_geo_point")
+				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
 						.continueWith(new Continuation<HttpsCallableResult, Object>() {
 							@Override
@@ -117,7 +117,7 @@ public class PinRepository {
 		parameters.put("longitude", longitude);
 
 		autoId = (String) await(
-				this.functions.getHttpsCallable("save_new_geo_point")
+				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
 						.continueWith(new Continuation<HttpsCallableResult, Object>() {
 							@Override
@@ -158,7 +158,7 @@ public class PinRepository {
 		parameters.put("longitude", longitude);
 
 		autoId = (String) await(
-				this.functions.getHttpsCallable("save_new_geo_point")
+				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
 						.continueWith(new Continuation<HttpsCallableResult, Object>() {
 							@Override
@@ -199,7 +199,7 @@ public class PinRepository {
 		parameters.put("comment", comment);
 
 		autoId = (String) await(
-				this.functions.getHttpsCallable("save_new_geo_point")
+				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
 						.continueWith(new Continuation<HttpsCallableResult, Object>() {
 							@Override
@@ -242,7 +242,7 @@ public class PinRepository {
 		parameters.put("longitude", longitude);
 
 		autoId = (String) await(
-				this.functions.getHttpsCallable("save_new_geo_point")
+				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
 						.continueWith(new Continuation<HttpsCallableResult, Object>() {
 							@Override

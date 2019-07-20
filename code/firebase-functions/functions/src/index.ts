@@ -70,8 +70,8 @@ exports.delete_user_document = functions.auth.user().onDelete((user, context) =>
 })
 
 // this function will save a geo point in firestore
-exports.save_new_geo_point = functions.https.onCall((data, context) => {
-	console.log('[Save new map point] Function has been called.')
+exports.save_new_pin = functions.https.onCall((data, context) => {
+	console.log('[Save new pin] Function has been called.')
 
 	const uid = context.auth.uid || null
 
@@ -116,15 +116,15 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 
 						// if point was not given
 						if (!(point instanceof GeoPoint) && typeof latitude === 'number' && typeof longitude === 'number') {
-							console.log('[Save new map point] point was not given but latitude and longitud were.')
+							console.log('[Save new pin] point was not given but latitude and longitud were.')
 							point = new GeoPoint(latitude, longitude)
 						}
 
 					} else {
-						console.error('[Save new map point] Invalid arguments were given')
-						console.error('[Save new map point] point:', point)
-						console.error('[Save new map point] latitude:', latitude)
-						console.error('[Save new map point] longitude:', longitude)
+						console.error('[Save new pin] Invalid arguments were given')
+						console.error('[Save new pin] point:', point)
+						console.error('[Save new pin] latitude:', latitude)
+						console.error('[Save new pin] longitude:', longitude)
 
 						throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
 							'one arguments "point" containing the GeoPoint or arguments "latitude" and "longitude"')
@@ -158,7 +158,7 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 
 							// if point was not given
 							if (!(point instanceof GeoPoint) && typeof latitude === 'number' && typeof longitude === 'number') {
-								console.log('[Save new map point] point was not given but latitude and longitud were.')
+								console.log('[Save new pin] point was not given but latitude and longitud were.')
 								point = new GeoPoint(latitude, longitude)
 							}
 
@@ -178,18 +178,18 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 							}
 
 						} else {
-							console.error('[Save new map point] Invalid arguments were given')
-							console.error('[Save new map point] point:', point)
-							console.error('[Save new map point] latitude:', latitude)
-							console.error('[Save new map point] longitude:', longitude)
+							console.error('[Save new pin] Invalid arguments were given')
+							console.error('[Save new pin] point:', point)
+							console.error('[Save new pin] latitude:', latitude)
+							console.error('[Save new pin] longitude:', longitude)
 
 							throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
 								'one arguments "point" containing the GeoPoint or arguments "latitude" and "longitude"')
 
 						}
 					} else {
-						console.error('[Save new map point] Argument(s) was/were not provided.')
-						console.error('[Save new map point] Admin has not provided North-East boundary and/or South-West boundaries.')
+						console.error('[Save new pin] Argument(s) was/were not provided.')
+						console.error('[Save new pin] Admin has not provided North-East boundary and/or South-West boundaries.')
 
 						throw new functions.https.HttpsError('invalid-argument', 'Admin has to provide North-East boundary and South-West boundaries.')
 					}
@@ -198,14 +198,14 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 
 				// it creates a document with an auto-id
 				return collection_ref.add(doc_info).then((value) => {
-					console.log('[Save new map point] Document created in path:', value.path)
-					console.log('[Save new map point] Document id:', value.id)
+					console.log('[Save new pin] Document created in path:', value.path)
+					console.log('[Save new pin] Document id:', value.id)
 
 					return { autoId: value.id }
 				}).catch((error) => {
-					console.error('[Save new map point] latitude:', point.latitude)
-					console.error('[Save new map point] longitude:', point.longitude)
-					console.error('[Save new map point] There was a problem at trying to create the document')
+					console.error('[Save new pin] latitude:', point.latitude)
+					console.error('[Save new pin] longitude:', point.longitude)
+					console.error('[Save new pin] There was a problem at trying to create the document')
 
 					console.error(error)
 
@@ -228,7 +228,7 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 		})
 	}
 
-	console.error('[Save new map point] User\'s id is not valid', uid)
+	console.error('[Save new pin] User\'s id is not valid', uid)
 	throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
 		'while authenticated.');
 
