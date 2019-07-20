@@ -26,5 +26,10 @@
     <string name="loading_message">Loading...</string>
     <string name="sign_out">Cerrar sesión</string>
 
+    // Facebook login
+    <string name="facebook_app_id">2418555221700748</string>
+    <string name="fb_login_protocol_scheme">fb2418555221700748</string>
+
+
 
 </resources>

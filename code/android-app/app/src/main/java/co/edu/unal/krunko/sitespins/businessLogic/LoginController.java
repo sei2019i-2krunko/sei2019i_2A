@@ -1,17 +1,30 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.widget.Toast;
 
-import co.edu.unal.krunko.sitespins.dataAccess.models.User;
+import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+
+import java.util.concurrent.ExecutionException;
+
+import bolts.Task;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.UserRepository;
 
 public class LoginController {
 
 	private Activity activity;
 
-
 	public LoginController(Activity activity) {
 		this.activity = activity;
+	}
+
+	public LoginController() {
 	}
 
 	public enum LoginStatus {
@@ -29,7 +42,7 @@ public class LoginController {
 		PASSWORD_IS_REQUIRED
 	}
 
-	public LoginStatus loginWithEmailAndPassword(String email, String password) {
+	public LoginStatus loginWithEmailAndPassword(String email, String password) throws ExecutionException, InterruptedException {
 		if (email == null
 				|| !email.toLowerCase().matches("^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$")) {
 			return LoginStatus.EMAIL_IS_REQUIRED_OR_INVALID;
@@ -43,8 +56,36 @@ public class LoginController {
 		return userRepository.getUserByEmailAndPassword(email, password) != null ? LoginStatus.SUCCESSFUL_LOGIN : LoginStatus.WRONG_CREDENTIALS;
 	}
 
-	public boolean isLoggedIn(){
+	public boolean isLoggedIn() {
 		return new UserRepository(null).getUser() != null;
+	}
+
+	public void handleFacebookAccessToken(AccessToken token) {
+		UserRepository userRepository = new UserRepository(this.activity, token);
+		if (userRepository.getFacebookUser() != null) {
+			Toast.makeText(this.activity, "Authentication success.",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this.activity, "Authentication failed.",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	public Intent handleGoogleSignUp(String clientId) {
+		GoogleSignInOptions ggo = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestIdToken(clientId)
+				.requestEmail()
+				.build();
+		UserRepository userRepository = new UserRepository(this.activity, ggo);
+		Intent signInIntent = userRepository.getGgLoggedIn().getSignInIntent();
+		return signInIntent;
+	}
+
+	public void handleGoogleSignInResult(Intent data) {
+		com.google.android.gms.tasks.Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+		if( new UserRepository(this.activity).getGoogleUser(task) != null){
+			// Access success
+		}
 	}
 
 }

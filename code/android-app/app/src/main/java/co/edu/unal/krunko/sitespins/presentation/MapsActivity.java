@@ -1,5 +1,6 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -45,6 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		UiSettings uiSettings = mMap.getUiSettings();
 		uiSettings.setZoomControlsEnabled(true);
+
 		uiSettings.setMapToolbarEnabled(true);
 
 		MapControllers mo = new MapControllers();

@@ -1,58 +1,62 @@
 package co.edu.unal.krunko.sitespins.dataAccess.models;
 
-public class Pin {
+import androidx.annotation.NonNull;
 
-	private String uid;
-	private int autoNum;
-	private float latitude;
-	private float longitude;
-	private boolean visited;
+import com.google.firebase.firestore.GeoPoint;
 
-	public Pin(String uid, int autoNum, float latitude, float longitude, boolean visited) {
-		this.uid = uid;
-		this.autoNum = autoNum;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.visited = visited;
+public abstract class Pin {
+
+	private String name;
+	private String owner;
+	private String autoId;
+	private String comment;
+	private GeoPoint point;
+
+	Pin(@NonNull String owner, String name, @NonNull String autoId, String comment, @NonNull GeoPoint point) {
+		this.owner = owner;
+		this.name = name;
+		this.autoId = autoId;
+		this.comment = comment;
+		this.point = point;
 	}
 
-	public String getUid() {
-		return uid;
+	public String getName() {
+		return name;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public int getAutoNum() {
-		return autoNum;
+	public String getOwner() {
+		return owner;
 	}
 
-	public void setAutoNum(int autoNum) {
-		this.autoNum = autoNum;
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
-	public float getLatitude() {
-		return latitude;
+	public String getAutoId() {
+		return autoId;
 	}
 
-	public void setLatitude(float latitude) {
-		this.latitude = latitude;
+	public void setAutoId(String autoId) {
+		this.autoId = autoId;
 	}
 
-	public float getLongitude() {
-		return longitude;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setLongitude(float longitude) {
-		this.longitude = longitude;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public boolean isVisited() {
-		return visited;
+	public GeoPoint getPoint() {
+		return point;
 	}
 
-	public void setVisited(boolean visited) {
-		this.visited = visited;
+	public void setPoint(GeoPoint point) {
+		this.point = point;
 	}
 }
