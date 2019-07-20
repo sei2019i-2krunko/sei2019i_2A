@@ -2,6 +2,7 @@ package co.edu.unal.krunko.sitespins.dataAccess.repositories;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
@@ -381,6 +382,10 @@ public class PinRepository {
 		}
 
 		return new PinUser(this.uid, name, autoId, comment, new GeoPoint(latitude, longitude));
+	}
+
+	public GeoPoint toGeoPoint(LatLng point){
+		return new GeoPoint(point.latitude, point.longitude);
 	}
 
 }

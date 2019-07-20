@@ -9,55 +9,52 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import co.edu.unal.krunko.sitespins.dataAccess.repositories.PinRepository;
 
-public class MapControllers {
+
+public class MapController {
 
 	private Activity activity;
+	private PinRepository pinRepository;
 
 
-	public MapControllers() {
-		this.activity = null;
+	public MapController() {
+		this(null);
 	}
 
-	public MapControllers(Activity activity) {
+	public MapController(Activity activity) {
 		this.activity = activity;
+		this.pinRepository = new PinRepository();
 	}
 
 	public void markerOfTheDay(GoogleMap mMap) {
 		//TODO:
-		//link en los repositorios como es
+		/*//link en los repositorios como es
 		LatLng markerOfTheDay = GlobalPinsRepository.getGeolocation();
 		mMap.addMarker(new MarkerOptions().position(markerOfTheDay).title("Marker of the day"));
-		mMap.moveCamera(CameraUpdateFactory.newLatLng(markerOfTheDay));
+		mMap.moveCamera(CameraUpdateFactory.newLatLng(markerOfTheDay));*/
 	}
 
 	public LatLngBounds markerOfTheDayBounds() {
 
-		//TODO:
+		/*//TODO:
 		//link en los repositorios como es
-		return globalPointsRepository.getBounds();
+		return globalPointsRepository.getBounds();*/
+		return null;
 	}
 
 	public void otherPines(GoogleMap mMap) {
 		//TODO:
-		//link en los repositorios como es
+		/*//link en los repositorios como es
 		pins[] pines = userRepository.getallPins;
 		for (int i = 0; i < pins.lenght; i++) {
 			dropPin(pins.geopoint, pins.name, pins.comment, mMap);
-		}
+		}*/
 
 	}
 
-	public void addMarker(LatLng point, LatLngBounds Bounds, String title, String message) {
-		//TODO:
-		//preguntar si el user es admin
-		if (user.admin) {
-			//agrega el pin
-			GlobalPinsRepository.addpin(point, Bounds, title, message);
-		} else {
-			//agrega el pin
-			userRepositry.addMarker(point, title, message);
-		}
+	public void addMarker(LatLng point, LatLngBounds bounds, String title, String message) {
+
 	}
 
 	public void dropPin(LatLng ll, String title, String message, GoogleMap mMap) {
