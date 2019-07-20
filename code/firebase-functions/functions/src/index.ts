@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions'
 import admin = require('firebase-admin')
 import { GeoPoint, DocumentReference, CollectionReference } from '@google-cloud/firestore';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import { isNullOrUndefined } from 'util';
 
 admin.initializeApp(functions.config().firebase)
 
@@ -76,19 +77,20 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 
 	// we verify if the user has passed as argument the point or latitute and longitude
 	let point: GeoPoint = data.point || null
-
 	const latitude: number = data.latitude || null
 	const longitude: number = data.longitude || null
+
+	// we verify if the user has passed these arguments (owner is not an argument)
 	const name: string = data.name || null
 	const comment: string = data.comment || null
+	const owner: string = uid || null
 
 	// admin purposes only
 	const NEBound: GeoPoint = data.NEBound || null
 	const SWBound: GeoPoint = data.SWBound || null
-	const owner: string = uid
 
 	// if it is a valid user
-	if (!context.auth) {
+	if (!context.auth || isNullOrUndefined(owner)) {
 
 		let user_info: DocumentReference | DocumentSnapshot = db.doc(`/users/${uid}`)
 
@@ -132,15 +134,15 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 					//if name was given we attach it
 					if (name) {
 						if (comment) {
-							doc_info = {owner, name, comment, point, visited: false }
+							doc_info = { owner, name, comment, point, visited: false }
 						} else {
-							doc_info = {owner, name, point, visited: false }
+							doc_info = { owner, name, point, visited: false }
 						}
 					} else {
 						if (comment) {
-							doc_info = {owner, comment, point, visited: false }
+							doc_info = { owner, comment, point, visited: false }
 						} else {
-							doc_info = {owner, point, visited: false }
+							doc_info = { owner, point, visited: false }
 						}
 					}
 
