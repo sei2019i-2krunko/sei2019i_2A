@@ -233,3 +233,46 @@ exports.save_new_geo_point = functions.https.onCall((data, context) => {
 		'while authenticated.');
 
 })
+
+// this function returns a promise of document's deletion
+function deleteDocumetPromise(document: DocumentReference) {
+	console.log(`[deleteDocumetPromise] Document id ${document.id}`)
+	console.log(`[deleteDocumetPromise] Path /global-pins/${document.id}`)
+
+	return db.collection('/global-pins').doc(document.id).delete();
+}
+
+// this function deletes documents in global-pins when a new is created
+exports.delete_global_pins = functions.firestore.document('/global-pins/{newPinID}')
+	.onCreate(document => {
+		console.log('[Delete global pins] Function has been triggered.')
+		console.log(`[Delete global pins] New document /global-pins/${document.id}`)
+
+		const promises = []
+
+		console.log(`[Delete global pins] Before deleting all documents bu ${document.id}.`)
+
+		return db.collection('/global-pins').listDocuments().then(docs => {
+			docs.forEach(doc => {
+
+				// we verify that the new document will not be deleted
+				if (doc.id !== document.id) {
+					console.log(`[Delete global pins] Document to be deleted ${doc.id}`)
+
+					// this will add the document deletion promise to the list of promises.
+					promises.push(deleteDocumetPromise(doc))
+				}
+			})
+			return Promise.all(promises)
+		}).then(value => {
+			// successful deletion of documents
+			console.log(`[Delete global pins] Succesful deletion.`)
+			console.log(`[Delete global pins] Value obtained ${value.values.toString}.`)
+			return true
+		}).catch(error => {
+			// error in deletion of documents
+			console.log(`[Delete global pins] There was an error while deleting ${error}`)
+			return false
+		})
+
+	})
