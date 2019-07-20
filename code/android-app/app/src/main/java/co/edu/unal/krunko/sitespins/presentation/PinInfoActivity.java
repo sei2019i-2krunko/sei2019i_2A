@@ -1,12 +1,12 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -31,10 +31,10 @@ public class PinInfoActivity extends AppCompatActivity {
 		//recupera el marker y los bounds
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			LatLng value = new LatLng(extras.getDouble("LatLngPLat"),extras.getDouble("LatLngPLong"));
+			LatLng value = new LatLng(extras.getDouble("LatLngPLat"), extras.getDouble("LatLngPLong"));
 			LatLngBounds value2 = new LatLngBounds(new LatLng(
-					extras.getDouble("aLatLngPbLat"),extras.getDouble("aLatLngPbLong"))
-					,new LatLng(extras.getDouble("bLatLngPbLat"),extras.getDouble("bLatLngPbLong"))
+					extras.getDouble("aLatLngPbLat"), extras.getDouble("aLatLngPbLong"))
+					, new LatLng(extras.getDouble("bLatLngPbLat"), extras.getDouble("bLatLngPbLong"))
 			);
 			//The key argument here must match that used in the other activity
 			n1 = value;
@@ -47,12 +47,13 @@ public class PinInfoActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				// devuelve lo que obtuvo
 				Intent intent = new Intent(getBaseContext(), MapsActivity.class);
-				mo.addMarker(n1,n2,_name.getText().toString(),_comment.getText().toString());
+				mo.addMarker(n1, n2, _name.getText().toString(), _comment.getText().toString());
 				startActivity(intent);
 			}
 		});
 
 	}
+
 	private void initViews() {
 
 		// Inicialización de Botones y Campos de Texto (desde Layout)
