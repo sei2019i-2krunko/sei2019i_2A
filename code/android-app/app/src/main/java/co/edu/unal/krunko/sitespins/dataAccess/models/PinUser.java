@@ -8,7 +8,7 @@ public class PinUser extends Pin {
 
 
 	/**
-	 * This method set by default visited to false.
+	 * This constructor set by default visited to false.
 	 *
 	 * @param owner   User's id.
 	 * @param name    Pin's name.

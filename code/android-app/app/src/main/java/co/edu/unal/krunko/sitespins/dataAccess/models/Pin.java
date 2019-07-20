@@ -1,5 +1,7 @@
 package co.edu.unal.krunko.sitespins.dataAccess.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.GeoPoint;
 
 public abstract class Pin {
@@ -10,7 +12,7 @@ public abstract class Pin {
 	private String comment;
 	private GeoPoint point;
 
-	Pin(String owner, String name, String autoId, String comment, GeoPoint point) {
+	Pin(@NonNull String owner, String name, @NonNull String autoId, String comment, GeoPoint point) {
 		this.owner = owner;
 		this.name = name;
 		this.autoId = autoId;
