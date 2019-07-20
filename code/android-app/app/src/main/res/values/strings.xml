@@ -1,34 +1,32 @@
 <resources>
     <string name="app_name" translatable="false">Sites &amp; Pins</string>
 
-    <string name="nombre">Nombre</string>
-    <string name="email">Email</string>
-    <string name="contraseña">Contraseña</string>
-    <string name="confirmar_contraseña">Confirmar contraseña</string>
+    <string name="email" translatable="false">Email</string>
 
-    <string name="ingresar">Ingresar</string>
-    <string name="facebook">Ingresar con Facebook</string>
-    <string name="google">Ingresar con Google</string>
-    <string name="anónimo">Ingresar como Anónimo</string>
-    <string name="ir_a_registro">¿No tienes cuenta? Crea una</string>
-
-    <string name="crear_cuenta">Crear cuenta</string>
-    <string name="regresar_a_login">¿Ya tienes una cuenta? Ingresa aquí</string>
-
-    <string name="PASSWORD_ERROR">Ingrese contraseña mayor a ocho(8) caracteres</string>
-    <string name="successfulLogin">Login exitoso</string>
-    <string name="WRONG_CREDENTIALS">Tu correo o contraseña es incorrecta</string>
-    <string name="verify_password">Verifica que tu contraseña sea la misma</string>
     <string name="title_activity_maps">Map</string>
-    <string name="goToMaps">Ir a mapas</string>
     <string name="welcome_main_activity">Welcome</string>
     <string name="loading_message">Loading...</string>
-    <string name="sign_out">Cerrar sesión</string>
 
     // Facebook login
-    <string name="facebook_app_id">2418555221700748</string>
-    <string name="fb_login_protocol_scheme">fb2418555221700748</string>
-    <string name="EMAIL_ERROR">Type a valid e-mail</string>
+    <string name="facebook_app_id" translatable="false">2418555221700748</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb2418555221700748</string>
+    <string name="EMAIL_ERROR">Enter a valid e-mail</string>
+    <string name="contraseña">Password</string>
+    <string name="crear_cuenta">Create an Account</string>
+    <string name="facebook">Login with Facebook</string>
+    <string name="WRONG_CREDENTIALS">Your email or password is incorrect</string>
+    <string name="PASSWORD_ERROR">Enter a password greater than eight (8) characters</string>
+    <string name="confirmar_contraseña">Confirm password</string>
+    <string name="anónimo">Login as anonymous</string>
+    <string name="goToMaps">Go to maps</string>
+    <string name="google">Login with Google</string>
+    <string name="ingresar">Login</string>
+    <string name="ir_a_registro">Haven\'t an account yet? Create one</string>
+    <string name="nombre">Name</string>
+    <string name="regresar_a_login">Do you already have an account? Enter here</string>
+    <string name="sign_out">Logout</string>
+    <string name="successfulLogin">Login succesfully</string>
+    <string name="verify_password">Verify that you password is the same</string>
 
 
 </resources>
