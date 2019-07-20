@@ -98,6 +98,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 		return user_info.get().then((doc) => {
 			let doc_info: any
 			user_info = doc
+			const admin = user_info.data().admin
 
 			//we check if the user has a document
 			if (user_info.exists) {
@@ -105,7 +106,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 				let collection_ref: CollectionReference
 
 				//we check if the user is not admin
-				if (!user_info.data().admin) {
+				if (!admin) {
 
 					//pins's user collection
 					const collection_path = `/users/${uid}/pins/`
@@ -201,7 +202,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 					console.log('[Save new pin] Document created in path:', value.path)
 					console.log('[Save new pin] Document id:', value.id)
 
-					return { autoId: value.id }
+					return { autoId: value.id, admin }
 				}).catch((error) => {
 					console.error('[Save new pin] latitude:', point.latitude)
 					console.error('[Save new pin] longitude:', point.longitude)
