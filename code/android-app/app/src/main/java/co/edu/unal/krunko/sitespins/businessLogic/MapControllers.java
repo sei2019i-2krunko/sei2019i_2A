@@ -36,7 +36,7 @@ public class MapControllers {
 		//TODO:
 		//link en los repositorios como es
 		pins[] pines = userRepository.getallPins;
-		for(int = 0;i<pins.lenght;i++){
+		for(int i = 0;i<pins.lenght;i++){
 			dropPin(pins.geopoint,pins.name,pins.comment,mMap);
 		}
 
