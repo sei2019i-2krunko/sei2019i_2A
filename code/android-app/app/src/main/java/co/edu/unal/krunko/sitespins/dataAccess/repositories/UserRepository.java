@@ -165,7 +165,6 @@ public class UserRepository {
 		return this.getUser();
 	}
 
-
 	public User createUserWithEmailAndPassword(String _email, String _password) throws ExecutionException, InterruptedException {
 		await(auth.createUserWithEmailAndPassword(_email, _password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
 			@Override
