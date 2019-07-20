@@ -1,15 +1,17 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import co.edu.unal.krunko.sitespins.R;
@@ -45,9 +47,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		UiSettings uiSettings = mMap.getUiSettings();
 		uiSettings.setZoomControlsEnabled(true);
-		MapControllers mo = new MapControllers();
-		LatLng markerOfTheDay = mo.markerOfTheDay();
-		mMap.addMarker(new MarkerOptions().position(markerOfTheDay).title("Marker of the day"));
-		mMap.moveCamera(CameraUpdateFactory.newLatLng(markerOfTheDay));
+		uiSettings.setMapToolbarEnabled(true);
+
+	    MapControllers mo = new MapControllers();
+	    //pone todos los markers
+	    mo.markerOfTheDay(mMap);
+	    mo.otherPines(mMap);
+	    //fronteriza el mapa de acuerdo a los bounds
+		LatLngBounds ne = mo.markerOfTheDayBounds();
+		mMap.setLatLngBoundsForCameraTarget(ne);
+		//si se mantiene oprimido lo lleva a la otra actividad
+		mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+			                               @Override
+			                               public void onMapLongClick(LatLng point) {
+												// save boundary
+				                               LatLngBounds value=mMap.getProjection().getVisibleRegion().latLngBounds;;
+				                               Intent i = new Intent(getBaseContext(), PinInfoActivity.class);
+				                               //send bounds
+				                               i.putExtra("aLatLngPbLat",value.southwest.latitude);
+				                               i.putExtra("aLatLngPbLong",value.southwest.longitude);
+				                               i.putExtra("bLatLngPbLat",value.northeast.latitude);
+				                               i.putExtra("bLatLngPbLong",value.northeast.longitude);
+				                               //send point
+				                               i.putExtra("LatLngPLat",point.latitude);
+				                               i.putExtra("LatLngPLong",point.longitude);
+
+				                               startActivity(i);
+				                           }
+		});
 	}
+
 }
