@@ -12,9 +12,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.firestore.GeoPoint;
 
 import co.edu.unal.krunko.sitespins.R;
-import co.edu.unal.krunko.sitespins.businessLogic.MapControllers;
+import co.edu.unal.krunko.sitespins.businessLogic.MapController;
+import co.edu.unal.krunko.sitespins.dataAccess.models.PinUser;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -49,31 +51,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 		uiSettings.setMapToolbarEnabled(true);
 
-		MapControllers mo = new MapControllers();
+		MapController mapController = new MapController();
+
 		//pone todos los markers
-		mo.markerOfTheDay(mMap);
-		mo.otherPines(mMap);
+		mapController.markerOfTheDay(mMap);
+		mapController.otherPines(mMap);
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			double [] point = extras.getDoubleArray("point");
+			String name = extras.getString("name");
+			String comment = extras.getString("comment");
+			String owner = extras.getString("owner");
+			String autoId = extras.getString("id");
+
+			mapController.dropPin(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
+		}
+
+
 		//fronteriza el mapa de acuerdo a los bounds
-		LatLngBounds ne = mo.markerOfTheDayBounds();
+		LatLngBounds ne = mapController.markerOfTheDayBounds();
 		mMap.setLatLngBoundsForCameraTarget(ne);
+
 		//si se mantiene oprimido lo lleva a la otra actividad
 		mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 			@Override
 			public void onMapLongClick(LatLng point) {
 				// save boundary
 				LatLngBounds value = mMap.getProjection().getVisibleRegion().latLngBounds;
-				;
-				Intent i = new Intent(getBaseContext(), PinInfoActivity.class);
-				//send bounds
-				i.putExtra("aLatLngPbLat", value.southwest.latitude);
-				i.putExtra("aLatLngPbLong", value.southwest.longitude);
-				i.putExtra("bLatLngPbLat", value.northeast.latitude);
-				i.putExtra("bLatLngPbLong", value.northeast.longitude);
-				//send point
-				i.putExtra("LatLngPLat", point.latitude);
-				i.putExtra("LatLngPLong", point.longitude);
+				Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
 
-				startActivity(i);
+				//send bounds
+				intent.putExtra("SWBoundLat", value.southwest.latitude);
+				intent.putExtra("SWBoundLong", value.southwest.longitude);
+				intent.putExtra("NEBoundLat", value.northeast.latitude);
+				intent.putExtra("NEBoundLong", value.northeast.longitude);
+
+				//send point
+				intent.putExtra("PointLat", point.latitude);
+				intent.putExtra("PointLong", point.longitude);
+
+				startActivity(intent);
 			}
 		});
 	}

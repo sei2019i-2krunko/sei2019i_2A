@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	@SuppressLint("StaticFieldLeak")
-	class LoginEmailPasswordTask extends AsyncTask<Object, Void, LoginController.LoginStatus> {
+	private class LoginEmailPasswordTask extends AsyncTask<Object, Void, LoginController.LoginStatus> {
 
 		@Override
 		protected synchronized LoginController.LoginStatus doInBackground(Object... objects) {

@@ -89,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
 	}
 
 	@SuppressLint("StaticFieldLeak")
-	class RegisterEmailPasswordTask extends AsyncTask<Object, Void, RegisterController.RegisterStatus> {
+	private class RegisterEmailPasswordTask extends AsyncTask<Object, Void, RegisterController.RegisterStatus> {
 
 		@Override
 		protected synchronized RegisterController.RegisterStatus doInBackground(Object... objects) {

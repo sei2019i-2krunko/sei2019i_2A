@@ -1,5 +1,7 @@
 package co.edu.unal.krunko.sitespins.dataAccess.repositories;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -8,6 +10,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
+
+import org.json.JSONArray;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -275,17 +279,22 @@ public class PinRepository {
 	 * @return A Pin instance with the parameters given with its id in Firebase.
 	 */
 	public Pin createNewPin(String name, GeoPoint point, String comment, GeoPoint NEBound, GeoPoint SWBound) throws ExecutionException, InterruptedException, NullPointerException {
-		HashMap<String, Object> parameters = new HashMap<>();
+		Map<String, Object> parameters = new HashMap<>();
 
 		String autoId;
 		Boolean admin;
 
 		parameters.put("name", name);
-		parameters.put("point", point);
+		parameters.put("latitude", point.getLatitude());
+		parameters.put("longitude", point.getLongitude());
 		parameters.put("comment", comment);
-		parameters.put("NEBound", NEBound);
-		parameters.put("SWBound", SWBound);
+		parameters.put("NEBoundLatitude", NEBound.getLatitude());
+		parameters.put("NEBoundLongitude", NEBound.getLongitude());
+		parameters.put("SWBoundLatitude", SWBound.getLatitude());
+		parameters.put("SWBoundLongitude", SWBound.getLongitude());
 
+
+		Log.w("save_new_pin", "Before :v");
 		Map<String, Object> result = (Map<String, Object>) await(
 				this.functions.getHttpsCallable("save_new_pin")
 						.call(parameters)
@@ -293,10 +302,11 @@ public class PinRepository {
 							@Override
 							public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
 								HttpsCallableResult result = task.getResult();
-
 								if (result != null) {
+									Log.d("save_new_pin", "There are data");
 									return result.getData();
 								}
+								Log.wtf("save_new_pin", "there is no data");
 								return null;
 							}
 						})
@@ -384,8 +394,12 @@ public class PinRepository {
 		return new PinUser(this.uid, name, autoId, comment, new GeoPoint(latitude, longitude));
 	}
 
-	public GeoPoint toGeoPoint(LatLng point){
+	public static GeoPoint toGeoPoint(LatLng point) {
 		return new GeoPoint(point.latitude, point.longitude);
+	}
+
+	public static LatLng toLatLong(GeoPoint point) {
+		return new LatLng(point.getLatitude(), point.getLongitude());
 	}
 
 }
