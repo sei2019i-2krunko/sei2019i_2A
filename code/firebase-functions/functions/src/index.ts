@@ -1,8 +1,6 @@
 import * as functions from 'firebase-functions'
 import admin = require('firebase-admin')
-import { GeoPoint, DocumentReference, CollectionReference } from '@google-cloud/firestore';
-import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
-import { isNullOrUndefined } from 'util';
+import { GeoPoint, DocumentReference, CollectionReference, DocumentSnapshot } from '@google-cloud/firestore';
 
 admin.initializeApp(functions.config().firebase)
 
@@ -76,7 +74,6 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 	const uid = context.auth.uid || null
 
 	// we verify if the user has passed as argument the point or latitute and longitude
-	let point: GeoPoint = data.point || null
 	const latitude: number = data.latitude || null
 	const longitude: number = data.longitude || null
 
@@ -86,41 +83,63 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 	const owner: string = uid || null
 
 	// admin purposes only
-	const NEBound: GeoPoint = data.NEBound || null
-	const SWBound: GeoPoint = data.SWBound || null
+	const NEBoundLatitude: number = data.NEBoundLatitude || null
+	const NEBoundLongitude: number = data.NEBoundLongitude || null
+	const SWBoundLatitude: GeoPoint = data.SWBoundLatitude || null
+	const SWBoundLongitude: GeoPoint = data.SWBoundLongitude || null
 
 	// if it is a valid user
-	if (!context.auth || isNullOrUndefined(owner)) {
+	if (context.auth) {
+
+		console.log('[Save new pin] User is logged in')
 
 		let user_info: DocumentReference | DocumentSnapshot = db.doc(`/users/${uid}`)
 
+		console.log(`[Save new pin] uid ${uid}`)
+
+		console.log(`[Save new pin] Getting a snapshot of document /users/${uid}`)
+
 		// we try to get the user's documet
 		return user_info.get().then((doc) => {
+
+			console.log(`[Save new pin] Document snapshot has been obtained ${doc}`)
+
 			let doc_info: any
+			let point: any
 			user_info = doc
-			const admin = user_info.data().admin
 
 			//we check if the user has a document
-			if (user_info.exists) {
+			if (user_info.data()) {
+
+				console.log('[Save new pin] There is info at the document')
+				const isAdmin: boolean = user_info.data().admin
+
+				console.log('[Save new pin] Is the user admin?', isAdmin)
 
 				let collection_ref: CollectionReference
 
 				//we check if the user is not admin
-				if (!admin) {
+				if (!isAdmin) {
 
+					console.log('[Save new pin] It is just a normal user')
 					//pins's user collection
 					const collection_path = `/users/${uid}/pins/`
 					collection_ref = db.collection(collection_path)
 
 					// if a non-null point or latitude and longitude arguments were given
-					if (point || (latitude && longitude)) {
+					console.log('[Save new pin] latitude received:', latitude)
+					console.log('[Save new pin] longitude received:', longitude);
+
+					if (latitude && longitude) {
+
 
 						// if point was not given
-						if (!(point instanceof GeoPoint) && typeof latitude === 'number' && typeof longitude === 'number') {
-							console.log('[Save new pin] point was not given but latitude and longitud were.')
-							point = new GeoPoint(latitude, longitude)
+						if (typeof latitude === 'number' && typeof longitude === 'number') {
+							console.log('[Save new pin] Creating instance of GeoPoint. [138]')
+							point = new admin.firestore.GeoPoint(latitude, longitude)
 						}
-
+						console.log('[Save new pin] Apparently point was set (we need an else [141])')
+						
 					} else {
 						console.error('[Save new pin] Invalid arguments were given')
 						console.error('[Save new pin] point:', point)
@@ -132,6 +151,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 
 					}
 
+					console.log('[Save new pin] Setting document info')
 					//if name was given we attach it
 					if (name) {
 						if (comment) {
@@ -147,20 +167,33 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 						}
 					}
 
+					console.log('[Save new pin] Document info:', doc_info)
+
 				}
 
 				else {
+					console.log('[Save new pin] It is an admin user')
+					
 					//pins's admin collection
+					let NEBound: GeoPoint
+					let SWBound: GeoPoint
 					const collection_path = `/global-pins/`
 					collection_ref = db.collection(collection_path)
 
-					if (NEBound && SWBound && NEBound instanceof GeoPoint && SWBound instanceof GeoPoint) {
-						if (point || (latitude && longitude)) {
+					if (NEBoundLatitude && NEBoundLongitude && SWBoundLatitude && SWBoundLongitude) {
+						if (latitude && longitude) {
 
 							// if point was not given
-							if (!(point instanceof GeoPoint) && typeof latitude === 'number' && typeof longitude === 'number') {
-								console.log('[Save new pin] point was not given but latitude and longitud were.')
-								point = new GeoPoint(latitude, longitude)
+							if (typeof latitude === 'number' && typeof longitude === 'number'
+								&& typeof NEBoundLatitude === 'number' && typeof NEBoundLongitude === 'number'
+								&& typeof SWBoundLongitude === 'number' && typeof SWBoundLatitude === 'number') {
+								console.log('[Save new pin] Creating admin points.')
+								point = new admin.firestore.GeoPoint(latitude, longitude)
+								NEBound = new admin.firestore.GeoPoint(NEBoundLatitude, NEBoundLongitude)
+								SWBound = new admin.firestore.GeoPoint(SWBoundLatitude, SWBoundLongitude)
+							} else {
+								console.error('[Save new pin] Error while creating points')
+								throw new functions.https.HttpsError('invalid-argument', 'Coordinate must numbers.')
 							}
 
 							//if name was given we attach it
@@ -197,12 +230,17 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 
 				}
 
+				console.log('[Save new pin] Before creating the new document')
+
 				// it creates a document with an auto-id
 				return collection_ref.add(doc_info).then((value) => {
 					console.log('[Save new pin] Document created in path:', value.path)
 					console.log('[Save new pin] Document id:', value.id)
 
-					return { autoId: value.id, admin }
+					let ret = { autoId: value.id, admin: isAdmin }
+
+					console.log('[Save new pin] values to be returned:', ret)
+					return ret
 				}).catch((error) => {
 					console.error('[Save new pin] latitude:', point.latitude)
 					console.error('[Save new pin] longitude:', point.longitude)
@@ -216,14 +254,18 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 
 			//if user's document does not exist
 			else {
+				console.error('[Save new pin] There was no info in the document')
 				throw new functions.https.HttpsError('not-found', `User\'s document was not found with uid: ${uid}`)
 			}
 
 			//if an error ocurred while getting user's document
 		}).catch((error) => {
+			console.error(`[Save new pin] Error accessing to document /users/${uid}`)
+			console.error(`[Save new pin] ${error}`)
+
 			throw new functions.https.HttpsError(
 				'unknown',
-				`There was an error while getting document /users/${uid}`,
+				`There was an error while getting document /users/${uid} ${error}`,
 				error
 			)
 		})
