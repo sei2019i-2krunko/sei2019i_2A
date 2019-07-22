@@ -111,6 +111,7 @@ public class PinInfoActivity extends AppCompatActivity {
 			intent.putExtra("id", pin.getAutoId());
 			intent.putExtra("comment", pin.getComment());
 			startActivity(intent);
+			finish();
 		}
 	}
 }

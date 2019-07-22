@@ -31,7 +31,7 @@ import co.edu.unal.krunko.sitespins.businessLogic.LoginController;
 
 public class LoginActivity extends AppCompatActivity {
 
-	private static final int REQUEST_SIGNUP = 0;
+	private static final int REQUEST_SIGN_UP = 0;
 	private static final int RC_SIGN_IN = 0;
 	private CallbackManager callbackManager;
 
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 					goToMainActivity();
 
 				} else {
-					Log.d("Activity", "In SignedinFirebaseMethod");
+					Log.d("Activity", "In SignedInFirebaseMethod");
 				}
 			}
 		};
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				// Iniciar el Activity de Sign-Up
 				Intent goSignup = new Intent(getApplicationContext(), SignUpActivity.class);
-				startActivityForResult(goSignup, REQUEST_SIGNUP);
+				startActivityForResult(goSignup, REQUEST_SIGN_UP);
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 			}
 		});
@@ -152,6 +152,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	private void goToMainActivity() {
 		Intent mainAct = new Intent(getApplicationContext(), MainActivity.class);
+		mainAct.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mainAct);
 		finish();
 	}
@@ -171,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 		_anonymousButton = findViewById(R.id.btn_login_A);
 
 		_signUpLink = findViewById(R.id.link_signup);
-		_facebookButton = (LoginButton) findViewById(R.id.btn_login_FB);
+		_facebookButton = findViewById(R.id.btn_login_FB);
 		_signInGoogle = findViewById(R.id.btn_login_G);
 
 	}
