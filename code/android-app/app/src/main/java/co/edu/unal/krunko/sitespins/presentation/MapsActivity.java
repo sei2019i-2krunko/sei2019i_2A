@@ -21,7 +21,7 @@ import co.edu.unal.krunko.sitespins.dataAccess.models.PinUser;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-	private GoogleMap mMap;
+	private GoogleMap googleMap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,34 +34,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	}
 
 
-	/**
-	 * Manipulates the map once available.
-	 * This callback is triggered when the map is ready to be used.
-	 * This is where we can add markers or lines, add listeners or move the camera. In this case,
-	 * we just add a marker near Sydney, Australia.
-	 * If Google Play services is not installed on the device, the user will be prompted to install
-	 * it inside the SupportMapFragment. This method will only be triggered once the user has
-	 * installed Google Play services and returned to the app.
-	 */
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
-		mMap = googleMap;
-		mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-		UiSettings uiSettings = mMap.getUiSettings();
+		this.googleMap = googleMap;
+		this.googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+		UiSettings uiSettings = this.googleMap.getUiSettings();
 		uiSettings.setZoomControlsEnabled(true);
 
 		uiSettings.setMapToolbarEnabled(true);
 
 		MapController mapController;
 
-		try{
+		try {
 			mapController = new MapController();
+			
 			//pone todos los markers
-			mapController.markerOfTheDay(mMap);
-			mapController.otherPines(mMap);
+			mapController.markerOfTheDay(this.googleMap);
+			mapController.otherPines(this.googleMap);
 			Bundle extras = getIntent().getExtras();
+
+			LatLngBounds ne = mapController.markerOfTheDayBounds();
+			this.googleMap.setLatLngBoundsForCameraTarget(ne);
+
+
+			// if we receive a pin from another activity
 			if (extras != null) {
-				double [] point = extras.getDoubleArray("point");
+				double[] point = extras.getDoubleArray("point");
 				String name = extras.getString("name");
 				String comment = extras.getString("comment");
 				String owner = extras.getString("owner");
@@ -70,15 +68,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 				mapController.dropPin(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
 				//fronteriza el mapa de acuerdo a los bounds
 			}
-			LatLngBounds ne = mapController.markerOfTheDayBounds();
-			mMap.setLatLngBoundsForCameraTarget(ne);
 
 			//si se mantiene oprimido lo lleva a la otra actividad
-			mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+			this.googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 				@Override
 				public void onMapLongClick(LatLng point) {
 					// save boundary
-					LatLngBounds value = mMap.getProjection().getVisibleRegion().latLngBounds;
+					LatLngBounds value = MapsActivity.this.googleMap.getProjection().getVisibleRegion().latLngBounds;
 					Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
 
 					//send bounds
@@ -94,11 +90,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					startActivity(intent);
 				}
 			});
-		}catch (NullPointerException n){
-			Toast.makeText(this, "This is not implemented yet.", Toast.LENGTH_SHORT).show();
+		} catch (NullPointerException n) {
+			Toast.makeText(this, "There was an error. Probably it is your user.", Toast.LENGTH_SHORT).show();
 			finish();
 		}
-
 
 
 	}
