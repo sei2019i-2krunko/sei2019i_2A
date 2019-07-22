@@ -69,31 +69,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 				mapController.dropPin(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
 				//fronteriza el mapa de acuerdo a los bounds
-				LatLngBounds ne = mapController.markerOfTheDayBounds();
-				mMap.setLatLngBoundsForCameraTarget(ne);
-
-				//si se mantiene oprimido lo lleva a la otra actividad
-				mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-					@Override
-					public void onMapLongClick(LatLng point) {
-						// save boundary
-						LatLngBounds value = mMap.getProjection().getVisibleRegion().latLngBounds;
-						Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
-
-						//send bounds
-						intent.putExtra("SWBoundLat", value.southwest.latitude);
-						intent.putExtra("SWBoundLong", value.southwest.longitude);
-						intent.putExtra("NEBoundLat", value.northeast.latitude);
-						intent.putExtra("NEBoundLong", value.northeast.longitude);
-
-						//send point
-						intent.putExtra("PointLat", point.latitude);
-						intent.putExtra("PointLong", point.longitude);
-
-						startActivity(intent);
-					}
-				});
 			}
+			LatLngBounds ne = mapController.markerOfTheDayBounds();
+			mMap.setLatLngBoundsForCameraTarget(ne);
+
+			//si se mantiene oprimido lo lleva a la otra actividad
+			mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+				@Override
+				public void onMapLongClick(LatLng point) {
+					// save boundary
+					LatLngBounds value = mMap.getProjection().getVisibleRegion().latLngBounds;
+					Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
+
+					//send bounds
+					intent.putExtra("SWBoundLat", value.southwest.latitude);
+					intent.putExtra("SWBoundLong", value.southwest.longitude);
+					intent.putExtra("NEBoundLat", value.northeast.latitude);
+					intent.putExtra("NEBoundLong", value.northeast.longitude);
+
+					//send point
+					intent.putExtra("PointLat", point.latitude);
+					intent.putExtra("PointLong", point.longitude);
+
+					startActivity(intent);
+				}
+			});
 		}catch (NullPointerException n){
 			Toast.makeText(this, "This is not implemented yet.", Toast.LENGTH_SHORT).show();
 			finish();
