@@ -1,7 +1,5 @@
 package co.edu.unal.krunko.sitespins.businessLogic;
 
-import android.app.Activity;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,16 +16,9 @@ import co.edu.unal.krunko.sitespins.dataAccess.repositories.PinRepository;
 
 public class MapController {
 
-	private Activity activity;
 	private PinRepository pinRepository;
 
-
 	public MapController() {
-		this(null);
-	}
-
-	public MapController(Activity activity) {
-		this.activity = activity;
 		this.pinRepository = new PinRepository();
 	}
 

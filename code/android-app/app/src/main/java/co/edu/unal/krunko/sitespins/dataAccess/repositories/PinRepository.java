@@ -28,9 +28,13 @@ public class PinRepository {
 	private FirebaseFunctions functions;
 	private String uid;
 
-	public PinRepository() {
+	public PinRepository() throws NullPointerException{
 		this.functions = FirebaseFunctions.getInstance();
-		this.uid = UserRepository.getCurrentUser().getUid();
+
+
+		if (UserRepository.getCurrentUser() != null) {
+			this.uid = UserRepository.getCurrentUser().getUid();
+		}
 
 		if (this.uid == null) {
 			throw new NullPointerException("User cannot be null");

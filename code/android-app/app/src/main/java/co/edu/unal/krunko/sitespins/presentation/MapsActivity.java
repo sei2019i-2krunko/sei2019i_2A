@@ -3,6 +3,7 @@ package co.edu.unal.krunko.sitespins.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -51,49 +52,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 		uiSettings.setMapToolbarEnabled(true);
 
-		MapController mapController = new MapController();
+		MapController mapController;
 
-		//pone todos los markers
-		mapController.markerOfTheDay(mMap);
-		mapController.otherPines(mMap);
+		try{
+			mapController = new MapController();
+			//pone todos los markers
+			mapController.markerOfTheDay(mMap);
+			mapController.otherPines(mMap);
+			Bundle extras = getIntent().getExtras();
+			if (extras != null) {
+				double [] point = extras.getDoubleArray("point");
+				String name = extras.getString("name");
+				String comment = extras.getString("comment");
+				String owner = extras.getString("owner");
+				String autoId = extras.getString("id");
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			double [] point = extras.getDoubleArray("point");
-			String name = extras.getString("name");
-			String comment = extras.getString("comment");
-			String owner = extras.getString("owner");
-			String autoId = extras.getString("id");
+				mapController.dropPin(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
+				//fronteriza el mapa de acuerdo a los bounds
+				LatLngBounds ne = mapController.markerOfTheDayBounds();
+				mMap.setLatLngBoundsForCameraTarget(ne);
 
-			mapController.dropPin(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
+				//si se mantiene oprimido lo lleva a la otra actividad
+				mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+					@Override
+					public void onMapLongClick(LatLng point) {
+						// save boundary
+						LatLngBounds value = mMap.getProjection().getVisibleRegion().latLngBounds;
+						Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
+
+						//send bounds
+						intent.putExtra("SWBoundLat", value.southwest.latitude);
+						intent.putExtra("SWBoundLong", value.southwest.longitude);
+						intent.putExtra("NEBoundLat", value.northeast.latitude);
+						intent.putExtra("NEBoundLong", value.northeast.longitude);
+
+						//send point
+						intent.putExtra("PointLat", point.latitude);
+						intent.putExtra("PointLong", point.longitude);
+
+						startActivity(intent);
+					}
+				});
+			}
+		}catch (NullPointerException n){
+			Toast.makeText(this, "This is not implemented yet.", Toast.LENGTH_SHORT).show();
+			finish();
 		}
 
 
-		//fronteriza el mapa de acuerdo a los bounds
-		LatLngBounds ne = mapController.markerOfTheDayBounds();
-		mMap.setLatLngBoundsForCameraTarget(ne);
 
-		//si se mantiene oprimido lo lleva a la otra actividad
-		mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-			@Override
-			public void onMapLongClick(LatLng point) {
-				// save boundary
-				LatLngBounds value = mMap.getProjection().getVisibleRegion().latLngBounds;
-				Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
-
-				//send bounds
-				intent.putExtra("SWBoundLat", value.southwest.latitude);
-				intent.putExtra("SWBoundLong", value.southwest.longitude);
-				intent.putExtra("NEBoundLat", value.northeast.latitude);
-				intent.putExtra("NEBoundLong", value.northeast.longitude);
-
-				//send point
-				intent.putExtra("PointLat", point.latitude);
-				intent.putExtra("PointLong", point.longitude);
-
-				startActivity(intent);
-			}
-		});
 	}
 
 }
