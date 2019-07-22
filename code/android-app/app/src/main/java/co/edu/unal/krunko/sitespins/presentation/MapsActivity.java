@@ -3,6 +3,7 @@ package co.edu.unal.krunko.sitespins.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
@@ -22,6 +23,7 @@ import co.edu.unal.krunko.sitespins.dataAccess.models.PinUser;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 	private GoogleMap googleMap;
+	private boolean isAdmin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			isAdmin = extras.getBoolean("isAdmin", false);
+			Log.d("Activity", "In MapsActivity");
+			Log.d("MapsActivity", "Is an admin? " + isAdmin);
+		}
 
 	}
 
@@ -47,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 		try {
 			mapController = new MapController();
-			
+
 			//pone todos los markers
 			mapController.markerOfTheDay(this.googleMap);
 			mapController.otherPines(this.googleMap);
@@ -58,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 			// if we receive a pin from another activity
-			if (extras != null) {
+			if (extras != null && !isAdmin) {
 				double[] point = extras.getDoubleArray("point");
 				String name = extras.getString("name");
 				String comment = extras.getString("comment");

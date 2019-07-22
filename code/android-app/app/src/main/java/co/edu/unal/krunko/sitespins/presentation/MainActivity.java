@@ -1,6 +1,8 @@
 package co.edu.unal.krunko.sitespins.presentation;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.ExecutionException;
 
 import co.edu.unal.krunko.sitespins.R;
 import co.edu.unal.krunko.sitespins.dataAccess.models.User;
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 				FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
 				if (firebaseUser == null) {
-					goToMainActivity();
+					goToLoginActivity();
 
 				} else {
 					Log.d("Activity", "In MainActivity");
@@ -72,13 +76,40 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void goToMapsActivity() {
-		Intent mapsAct = new Intent(getApplicationContext(), MapsActivity.class);
-		startActivity(mapsAct);
+		new GoToMapsActivityTask().execute();
 	}
 
-	public void goToMainActivity() {
+	public void goToLoginActivity() {
 		Intent backLogin = new Intent(getApplicationContext(), LoginActivity.class);
+		backLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(backLogin);
 		finish();
 	}
+
+	@SuppressLint("StaticFieldLeak")
+	private class GoToMapsActivityTask extends AsyncTask<Void, Void, Boolean> {
+		@Override
+		protected synchronized Boolean doInBackground(Void... voids) {
+
+			Boolean isAdmin = null;
+
+			try {
+				isAdmin = UserRepository.isAdminFirestore(UserRepository.getCurrentUser().getUid());
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			return isAdmin;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean isAdmin) {
+			Intent mapsAct = new Intent(getApplicationContext(), MapsActivity.class);
+			mapsAct.putExtra("isAdmin", isAdmin);
+			startActivity(mapsAct);
+		}
+	}
+
 }
