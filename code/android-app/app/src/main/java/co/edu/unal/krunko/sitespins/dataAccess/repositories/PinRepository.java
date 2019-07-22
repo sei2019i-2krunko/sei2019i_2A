@@ -407,12 +407,12 @@ public class PinRepository {
 	}
 
 
-	public List<PinUser> getPins() {
+	public List<PinUser> getPins() throws ExecutionException, InterruptedException {
 		CollectionReference users_pins = this.firestore.collection("/users/" + this.uid + "/pins");
 
 		final List<PinUser> userPins = new ArrayList<>();
 
-		users_pins.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+		await(users_pins.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 			@Override
 			public void onComplete(@NonNull Task<QuerySnapshot> task) {
 				if (task.isSuccessful()) {
@@ -440,7 +440,7 @@ public class PinRepository {
 					Log.e("PinRepository", "Error getting documents in collection /users/" + uid + "/pins/");
 				}
 			}
-		});
+		}));
 		return userPins;
 	}
 

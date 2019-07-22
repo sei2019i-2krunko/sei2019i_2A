@@ -2,6 +2,7 @@ package co.edu.unal.krunko.sitespins.presentation;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -108,5 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 	}
+
 
 }
