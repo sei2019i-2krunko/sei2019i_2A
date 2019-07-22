@@ -89,8 +89,8 @@ public class MapController {
 			List<Object> pins = new ArrayList<>(2);
 			try {
 				PinRepository repository = (PinRepository)objects[0];
-				pins.add(repository.getPins());
-				pins.add(objects[1]);
+				pins.add(repository.getPins());//List<PinUser>
+				pins.add(objects[1]); //GoogleMap
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {

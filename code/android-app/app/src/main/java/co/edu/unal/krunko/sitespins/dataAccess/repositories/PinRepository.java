@@ -407,6 +407,14 @@ public class PinRepository {
 	}
 
 
+	/**
+	 * This method will get every user's pins (from their collection in firebase).
+	 *
+	 * @return User's pins
+	 * @throws ExecutionException   If happens any runtime error (such as network or anything else).
+	 * @throws InterruptedException If the task is interrupted.
+	 */
+	@SuppressWarnings("JavadocReference")
 	public List<PinUser> getPins() throws ExecutionException, InterruptedException {
 		CollectionReference users_pins = this.firestore.collection("/users/" + this.uid + "/pins");
 
@@ -419,11 +427,11 @@ public class PinRepository {
 					for (QueryDocumentSnapshot doc :
 							Objects.requireNonNull(task.getResult())) {
 						String id = doc.getId();
-						String name = (String) doc.get("name");
-						String owner = (String) doc.get("owner");
-						String comment = (String) doc.get("comment");
-						GeoPoint point = (GeoPoint) doc.get("point");
-						boolean visited = (Boolean) doc.get("visited");
+						String name = doc.getString("name");
+						String owner = doc.getString("owner");
+						String comment = doc.getString("comment");
+						GeoPoint point = doc.getGeoPoint("point");
+						boolean visited = doc.getBoolean("visited");
 
 						userPins.add(new PinUser(owner, name, id, comment, point, visited));
 
@@ -444,8 +452,16 @@ public class PinRepository {
 		return userPins;
 	}
 
-	public PinAdmin getGlobalPin() {
+	public PinAdmin getGlobalPin() throws ExecutionException, InterruptedException {
 		CollectionReference global_pins = this.firestore.collection("/global-pins/");
+
+		await(global_pins.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+			@Override
+			public void onComplete(@NonNull Task<QuerySnapshot> task) {
+				// TODO: 22/07/19 get a time stamp in case that there are more than one global pin)
+				//  get the most recent one
+			}
+		}));
 
 		return null;
 	}
