@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 		protected void onPostExecute(Boolean isAdmin) {
 			Intent mapsAct = new Intent(getApplicationContext(), MapsActivity.class);
 			mapsAct.putExtra("isAdmin", isAdmin);
+			mapsAct.putExtra("fromMainActivity", true);
 			startActivity(mapsAct);
 		}
 	}

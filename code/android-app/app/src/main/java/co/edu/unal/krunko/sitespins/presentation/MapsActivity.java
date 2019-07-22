@@ -2,7 +2,6 @@ package co.edu.unal.krunko.sitespins.presentation;
 
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		mapFragment.getMapAsync(this);
 
 		Bundle extras = getIntent().getExtras();
+
 		if (extras != null) {
 			isAdmin = extras.getBoolean("isAdmin", false);
 			Log.d("Activity", "In MapsActivity");
@@ -69,7 +69,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 			// if we receive a pin from another activity
 			if (extras != null && !isAdmin) {
-				if (extras.getDoubleArray("point") != null) {
+
+				// did we receive this from main activity?
+				boolean from_main_activity = extras.getBoolean("fromMainActivity", false);
+
+				if (!from_main_activity) {
 					double[] point = extras.getDoubleArray("point");
 					String name = extras.getString("name");
 					String comment = extras.getString("comment");
@@ -78,7 +82,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 					mapController.showPinInMaps(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
 				}
-				//fronteriza el mapa de acuerdo a los bounds
 			}
 
 			//si se mantiene oprimido lo lleva a la otra actividad
@@ -88,6 +91,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					// save boundary
 					LatLngBounds value = MapsActivity.this.googleMap.getProjection().getVisibleRegion().latLngBounds;
 					Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
+
+					//send admin info
+					intent.putExtra("isAdmin", isAdmin);
 
 					//send bounds
 					intent.putExtra("SWBoundLat", value.southwest.latitude);

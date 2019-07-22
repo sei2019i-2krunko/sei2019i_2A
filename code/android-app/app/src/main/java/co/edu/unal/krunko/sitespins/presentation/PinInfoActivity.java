@@ -53,6 +53,8 @@ public class PinInfoActivity extends AppCompatActivity {
 			//The key argument here must match that used in the other activity
 			this.point = point;
 			this.boundaries = boundaries;
+		} else {
+			finish();
 		}
 
 		_entry.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +112,7 @@ public class PinInfoActivity extends AppCompatActivity {
 			intent.putExtra("owner", pin.getOwner());
 			intent.putExtra("id", pin.getAutoId());
 			intent.putExtra("comment", pin.getComment());
+			intent.putExtra("isAdmin", getIntent().getExtras().getBoolean("isAdmin", false));
 			startActivity(intent);
 			finish();
 		}
