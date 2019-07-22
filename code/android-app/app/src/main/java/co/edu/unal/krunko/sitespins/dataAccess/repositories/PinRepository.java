@@ -14,6 +14,7 @@ import com.google.firebase.functions.HttpsCallableResult;
 import org.json.JSONArray;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -396,6 +397,15 @@ public class PinRepository {
 		}
 
 		return new PinUser(this.uid, name, autoId, comment, new GeoPoint(latitude, longitude));
+	}
+
+
+	public List<PinUser> getPins(){
+		return null;
+	}
+
+	public PinAdmin getGlobalPin(){
+		return null;
 	}
 
 	public static GeoPoint toGeoPoint(LatLng point) {

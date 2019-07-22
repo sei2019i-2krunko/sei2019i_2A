@@ -22,12 +22,18 @@ public class MapController {
 		this.pinRepository = new PinRepository();
 	}
 
-	public void markerOfTheDay(GoogleMap mMap) {
-		//TODO:
-		/*//link en los repositorios como es
-		LatLng markerOfTheDay = GlobalPinsRepository.getGeolocation();
-		mMap.addNewPin(new MarkerOptions().position(markerOfTheDay).title("Marker of the day"));
+	public void showPins(GoogleMap googleMap, boolean isAdmin) {
+		// TODO: 22/07/19 implement for admin and non-admin users
+		/*mMap.createNewPin(new MarkerOptions().position(markerOfTheDay).title("Marker of the day"));
 		mMap.moveCamera(CameraUpdateFactory.newLatLng(markerOfTheDay));*/
+		if (!isAdmin){
+			// TODO: 22/07/19  Non-admin:
+			//  get global pin and then lock the map scrolling
+			//  show their pins
+		}else {
+			// TODO: 22/07/19  Admin:
+			//  get global pin without lock the map scrolling
+		}
 	}
 
 	public LatLngBounds markerOfTheDayBounds() {
@@ -38,17 +44,17 @@ public class MapController {
 		return null;
 	}
 
-	public void otherPines(GoogleMap mMap) {
+	public void otherPines(GoogleMap googleMap) {
 		//TODO:
 		/*//link en los repositorios como es
 		pins[] pines = userRepository.getallPins;
 		for (int i = 0; i < pins.lenght; i++) {
-			dropPin(pins.geopoint, pins.name, pins.comment, mMap);
+			showPinInMaps(pins.geopoint, pins.name, pins.comment, googleMap);
 		}*/
 
 	}
 
-	public Pin addNewPin(LatLng point, LatLngBounds bounds, String title, String message) throws ExecutionException, InterruptedException {
+	public Pin createNewPin(LatLng point, LatLngBounds bounds, String title, String message) throws ExecutionException, InterruptedException {
 		GeoPoint geoPoint = PinRepository.toGeoPoint(point);
 
 		GeoPoint NEBound = PinRepository.toGeoPoint(bounds.northeast);
@@ -57,7 +63,7 @@ public class MapController {
 		return this.pinRepository.createNewPin(title, geoPoint, message, NEBound, SWBound);
 	}
 
-	public void dropPin(PinUser pin, GoogleMap map) {
+	public void showPinInMaps(PinUser pin, GoogleMap map) {
 
 		MarkerOptions options = new MarkerOptions()
 				.position(PinRepository.toLatLong(pin.getPoint()))

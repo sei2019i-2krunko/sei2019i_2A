@@ -88,7 +88,7 @@ public class PinInfoActivity extends AppCompatActivity {
 			Pin pin = null;
 
 			try {
-				pin = mapController.addNewPin(
+				pin = mapController.createNewPin(
 						(LatLng) objects[0],  // point
 						(LatLngBounds) objects[1], // Boundaries
 						(String) objects[2], // name

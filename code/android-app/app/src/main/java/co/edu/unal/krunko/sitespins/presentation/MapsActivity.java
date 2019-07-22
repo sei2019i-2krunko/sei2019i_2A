@@ -58,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 			mapController = new MapController();
 
 			//pone todos los markers
-			mapController.markerOfTheDay(this.googleMap);
+			mapController.showPins(this.googleMap, this.isAdmin);
 			mapController.otherPines(this.googleMap);
 			Bundle extras = getIntent().getExtras();
 
@@ -74,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 				String owner = extras.getString("owner");
 				String autoId = extras.getString("id");
 
-				mapController.dropPin(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
+				mapController.showPinInMaps(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
 				//fronteriza el mapa de acuerdo a los bounds
 			}
 
