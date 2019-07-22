@@ -68,13 +68,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 			// if we receive a pin from another activity
 			if (extras != null && !isAdmin) {
-				double[] point = extras.getDoubleArray("point");
-				String name = extras.getString("name");
-				String comment = extras.getString("comment");
-				String owner = extras.getString("owner");
-				String autoId = extras.getString("id");
+				if (extras.getDoubleArray("point") != null) {
+					double[] point = extras.getDoubleArray("point");
+					String name = extras.getString("name");
+					String comment = extras.getString("comment");
+					String owner = extras.getString("owner");
+					String autoId = extras.getString("id");
 
-				mapController.showPinInMaps(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
+					mapController.showPinInMaps(new PinUser(owner, name, autoId, comment, new GeoPoint(point[0], point[1])), googleMap);
+				}
 				//fronteriza el mapa de acuerdo a los bounds
 			}
 

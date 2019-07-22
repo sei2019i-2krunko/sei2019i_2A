@@ -6,16 +6,21 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
-import org.json.JSONArray;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import co.edu.unal.krunko.sitespins.dataAccess.models.Pin;
@@ -27,10 +32,12 @@ import static com.google.android.gms.tasks.Tasks.await;
 public class PinRepository {
 
 	private FirebaseFunctions functions;
+	private FirebaseFirestore firestore;
 	private String uid;
 
-	public PinRepository() throws NullPointerException{
+	public PinRepository() throws NullPointerException {
 		this.functions = FirebaseFunctions.getInstance();
+		this.firestore = FirebaseFirestore.getInstance();
 
 
 		if (UserRepository.getCurrentUser() != null) {
@@ -400,11 +407,46 @@ public class PinRepository {
 	}
 
 
-	public List<PinUser> getPins(){
-		return null;
+	public List<PinUser> getPins() {
+		CollectionReference users_pins = this.firestore.collection("/users/" + this.uid + "/pins");
+
+		final List<PinUser> userPins = new ArrayList<>();
+
+		users_pins.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+			@Override
+			public void onComplete(@NonNull Task<QuerySnapshot> task) {
+				if (task.isSuccessful()) {
+					for (QueryDocumentSnapshot doc :
+							Objects.requireNonNull(task.getResult())) {
+						String id = doc.getId();
+						String name = (String) doc.get("name");
+						String owner = (String) doc.get("owner");
+						String comment = (String) doc.get("comment");
+						GeoPoint point = (GeoPoint) doc.get("point");
+						boolean visited = (Boolean) doc.get("visited");
+
+						userPins.add(new PinUser(owner, name, id, comment, point, visited));
+
+						Log.d("PinRepository", "Pin's id: " + id);
+						Log.d("PinRepository", "Pin's name: " + name);
+						Log.d("PinRepository", "Pin's owner: " + owner);
+						Log.d("PinRepository", "Pin's comment: " + comment);
+						Log.d("PinRepository", "Pin's visited: " + visited);
+						Log.d("PinRepository", "Pin's point: " + point.toString());
+						Log.d("PinRepository", "---------------------------");
+					}
+
+				} else {
+					Log.e("PinRepository", "Error getting documents in collection /users/" + uid + "/pins/");
+				}
+			}
+		});
+		return userPins;
 	}
 
-	public PinAdmin getGlobalPin(){
+	public PinAdmin getGlobalPin() {
+		CollectionReference global_pins = this.firestore.collection("/global-pins/");
+
 		return null;
 	}
 

@@ -28,7 +28,7 @@ public class PinUser extends Pin {
 	 * @param point   Pin's location.
 	 * @param visited Pin's visited state.
 	 */
-	private PinUser(String owner, String name, String autoId, String comment, GeoPoint point, boolean visited) {
+	public PinUser(String owner, String name, String autoId, String comment, GeoPoint point, boolean visited) {
 		super(owner, name, autoId, comment, point);
 		this.visited = visited;
 	}

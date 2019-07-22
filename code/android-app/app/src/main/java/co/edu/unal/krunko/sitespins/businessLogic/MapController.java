@@ -30,6 +30,7 @@ public class MapController {
 			// TODO: 22/07/19  Non-admin:
 			//  get global pin and then lock the map scrolling
 			//  show their pins
+			this.pinRepository.getPins();
 		}else {
 			// TODO: 22/07/19  Admin:
 			//  get global pin without lock the map scrolling
