@@ -139,7 +139,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 							point = new admin.firestore.GeoPoint(latitude, longitude)
 						}
 						console.log('[Save new pin] Apparently point was set (we need an else [141])')
-						
+
 					} else {
 						console.error('[Save new pin] Invalid arguments were given')
 						console.error('[Save new pin] point:', point)
@@ -173,7 +173,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 
 				else {
 					console.log('[Save new pin] It is an admin user')
-					
+
 					//pins's admin collection
 					let NEBound: GeoPoint
 					let SWBound: GeoPoint
@@ -199,15 +199,15 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 							//if name was given we attach it
 							if (name) {
 								if (comment) {
-									doc_info = { owner, name, comment, point, NEBound, SWBound }
+									doc_info = { owner, name, comment, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
 								} else {
-									doc_info = { owner, name: name, point, NEBound, SWBound }
+									doc_info = { owner, name: name, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
 								}
 							} else {
 								if (comment) {
-									doc_info = { owner, comment: comment, NEBound, SWBound }
+									doc_info = { owner, comment: comment, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
 								} else {
-									doc_info = { owner, point, NEBound, SWBound }
+									doc_info = { owner, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
 								}
 							}
 
@@ -237,7 +237,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 					console.log('[Save new pin] Document created in path:', value.path)
 					console.log('[Save new pin] Document id:', value.id)
 
-					let ret = { autoId: value.id, admin: isAdmin }
+					const ret = { autoId: value.id, admin: isAdmin }
 
 					console.log('[Save new pin] values to be returned:', ret)
 					return ret
