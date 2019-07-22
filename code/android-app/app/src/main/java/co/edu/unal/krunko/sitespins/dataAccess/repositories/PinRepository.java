@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -34,6 +35,7 @@ public class PinRepository {
 	private FirebaseFunctions functions;
 	private FirebaseFirestore firestore;
 	private String uid;
+	private String TAG = "PinRepository";
 
 	public PinRepository() throws NullPointerException {
 		this.functions = FirebaseFunctions.getInstance();
@@ -435,13 +437,13 @@ public class PinRepository {
 
 						userPins.add(new PinUser(owner, name, id, comment, point, visited));
 
-						Log.d("PinRepository", "Pin's id: " + id);
-						Log.d("PinRepository", "Pin's name: " + name);
-						Log.d("PinRepository", "Pin's owner: " + owner);
-						Log.d("PinRepository", "Pin's comment: " + comment);
-						Log.d("PinRepository", "Pin's visited: " + visited);
-						Log.d("PinRepository", "Pin's point: " + point.toString());
-						Log.d("PinRepository", "---------------------------");
+						Log.d(TAG, "Pin's id: " + id);
+						Log.d(TAG, "Pin's name: " + name);
+						Log.d(TAG, "Pin's owner: " + owner);
+						Log.d(TAG, "Pin's comment: " + comment);
+						Log.d(TAG, "Pin's visited: " + visited);
+						Log.d(TAG, "Pin's point: " + point.toString());
+						Log.d(TAG, "---------------------------");
 					}
 
 				} else {
@@ -452,18 +454,85 @@ public class PinRepository {
 		return userPins;
 	}
 
+	/**
+	 * This method will get the most recent
+	 *
+	 * @return A PinAdmin object if have found any global pin.
+	 * If there are more than one global pin, it will only return the most recent one.
+	 * @throws ExecutionException   If happens any runtime error (such as network or anything else).
+	 * @throws InterruptedException If the task is interrupted.
+	 */
+	@SuppressWarnings("JavadocReference")
 	public PinAdmin getGlobalPin() throws ExecutionException, InterruptedException {
 		CollectionReference global_pins = this.firestore.collection("/global-pins/");
+
+		final PinAdmin[] global_pin = {null};
 
 		await(global_pins.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 			@Override
 			public void onComplete(@NonNull Task<QuerySnapshot> task) {
 				// TODO: 22/07/19 get a time stamp in case that there are more than one global pin)
 				//  get the most recent one
+
+				if (task.isSuccessful()) {
+					Log.d(TAG, "Get global pins task is successful.");
+
+					Timestamp most_recent = null;
+					for (QueryDocumentSnapshot doc :
+							Objects.requireNonNull(task.getResult())) {
+						boolean modify = false;
+
+						String id = doc.getId();
+						Timestamp createdAt = doc.getTimestamp("createdAt");
+
+						Log.d(TAG, "Before assert of createdAt");
+						assert createdAt != null;
+						Log.d(TAG, "Global pin's id: " + id);
+						Log.d(TAG, "Global pin. Created at: " + createdAt.toString());
+
+						if (most_recent == null) {
+							most_recent = createdAt;
+							modify = true;
+						} else if (createdAt.compareTo(most_recent) > 0) {
+							most_recent = createdAt;
+							modify = true;
+						}
+
+						if (modify) {
+							Log.d(TAG, "-------->[Creating new PinAdmin from /global-pins/" + id);
+							String name = doc.getString("name");
+							String owner = doc.getString("owner");
+							String comment = doc.getString("comment");
+							GeoPoint point = doc.getGeoPoint("point");
+							GeoPoint NEBound = doc.getGeoPoint("NEBound");
+							GeoPoint SWBound = doc.getGeoPoint("SWBound");
+
+							Log.w(TAG, "Before assert statements");
+
+							assert point != null;
+							assert NEBound != null;
+							assert SWBound != null;
+
+							Log.d(TAG, "Pin's id: " + id);
+							Log.d(TAG, "Pin's name: " + name);
+							Log.d(TAG, "Pin's owner: " + owner);
+							Log.d(TAG, "Pin's comment: " + comment);
+							Log.d(TAG, "Pin's point: " + point.toString());
+							Log.d(TAG, "Pin's North-East Boundary: " + NEBound.toString());
+							Log.d(TAG, "Pin's South-West Boundary: " + SWBound.toString());
+
+							global_pin[0] = new PinAdmin(owner, name, id, comment, point, NEBound, SWBound);
+						}
+
+						Log.d(TAG, "---------------------------");
+					}
+				} else {
+					Log.e(TAG, "Error getting global pins");
+				}
 			}
 		}));
 
-		return null;
+		return global_pin[0];
 	}
 
 	public static GeoPoint toGeoPoint(LatLng point) {
