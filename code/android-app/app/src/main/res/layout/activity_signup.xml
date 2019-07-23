@@ -36,7 +36,7 @@
                 android:id="@+id/input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/nombre"
+                android:hint="@string/name"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,7 +68,7 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/contraseña"
+                android:hint="@string/password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +84,7 @@
                 android:id="@+id/input_reEnterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/confirmar_contraseña"
+                android:hint="@string/confirm_password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,9 +95,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:onClick="@string/crear_cuenta"
             android:padding="12dp"
-            android:text="Crear cuenta" />
+            android:text="@string/create_account" />
 
         <TextView
             android:id="@+id/link_login"
@@ -106,7 +105,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="24dp"
             android:gravity="center"
-            android:text="@string/regresar_a_login"
+            android:text="@string/get_back_login"
             android:textSize="16dip"
             android:textStyle="bold" />
 

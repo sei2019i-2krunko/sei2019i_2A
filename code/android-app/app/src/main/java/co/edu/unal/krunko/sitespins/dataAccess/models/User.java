@@ -2,6 +2,9 @@ package co.edu.unal.krunko.sitespins.dataAccess.models;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 
 public class User {
@@ -13,7 +16,7 @@ public class User {
 	private String providerId;
 	private boolean admin;
 
-	public User(String uid, String displayName, Uri photoUrl, String email, String providerId) {
+	public User(@NonNull String uid, String displayName, Uri photoUrl, String email, String providerId) {
 		this.uid = uid;
 		this.displayName = displayName;
 		this.photoUrl = photoUrl;
@@ -22,7 +25,7 @@ public class User {
 		this.admin = false;
 	}
 
-	public User(String uid, String displayName, Uri photoUrl, String email, String providerId, boolean admin) {
+	public User(@NonNull String uid, String displayName, Uri photoUrl, String email, String providerId, boolean admin) {
 		this.uid = uid;
 		this.displayName = displayName;
 		this.photoUrl = photoUrl;
@@ -86,6 +89,16 @@ public class User {
 				firebaseUser.getPhotoUrl(),
 				firebaseUser.getEmail(),
 				firebaseUser.getProviderId()
+		);
+	}
+
+	public static User fromGoogleUser(GoogleSignInAccount account) {
+		return account == null ? null : new User(
+				account.getId(),
+				account.getDisplayName(),
+				account.getPhotoUrl(),
+				account.getEmail(),
+				account.getIdToken()
 		);
 	}
 }
