@@ -211,6 +211,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 									doc_info = { owner, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now(), zoom }
 								}
 							}
+							console.log('[Save new pin] Document info:', doc_info)
 
 						} else {
 							console.error('[Save new pin] Invalid arguments were given')

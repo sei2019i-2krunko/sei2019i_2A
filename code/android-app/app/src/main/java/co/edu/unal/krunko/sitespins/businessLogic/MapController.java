@@ -38,13 +38,13 @@ public class MapController {
 		}
 	}
 
-	public Pin createNewPin(LatLng point, LatLngBounds bounds, String title, String message) throws ExecutionException, InterruptedException {
+	public Pin createNewPin(LatLng point, LatLngBounds bounds, String title, String message, double zoom) throws ExecutionException, InterruptedException {
 		GeoPoint geoPoint = PinRepository.toGeoPoint(point);
 
 		GeoPoint NEBound = PinRepository.toGeoPoint(bounds.northeast);
 		GeoPoint SWBound = PinRepository.toGeoPoint(bounds.southwest);
 
-		return this.pinRepository.createNewPin(title, geoPoint, message, NEBound, SWBound);
+		return this.pinRepository.createNewPin(title, geoPoint, message, NEBound, SWBound, (float) zoom);
 	}
 
 	public void showPinInMaps(PinUser pin, GoogleMap map) {
@@ -149,6 +149,7 @@ public class MapController {
 								PinRepository.toLatLong(pinAdmin.getNEBound())
 						)
 				);
+				googleMap.setMinZoomPreference((float) pinAdmin.getZoom());
 			}
 		}
 	}

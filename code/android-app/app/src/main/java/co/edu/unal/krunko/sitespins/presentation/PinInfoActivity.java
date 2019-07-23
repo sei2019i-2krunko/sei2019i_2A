@@ -27,6 +27,7 @@ public class PinInfoActivity extends AppCompatActivity {
 
 	LatLng point;
 	LatLngBounds boundaries;
+	Float zoom;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,9 @@ public class PinInfoActivity extends AppCompatActivity {
 			//The key argument here must match that used in the other activity
 			this.point = point;
 			this.boundaries = boundaries;
+
+			this.zoom = extras.getFloat("zoom");
+
 		} else {
 			finish();
 		}
@@ -65,7 +69,8 @@ public class PinInfoActivity extends AppCompatActivity {
 						point,
 						boundaries,
 						_name.getText().toString(),
-						_comment.getText().toString()
+						_comment.getText().toString(),
+						zoom
 				);
 			}
 		});
@@ -90,11 +95,14 @@ public class PinInfoActivity extends AppCompatActivity {
 			Pin pin = null;
 
 			try {
+				float _zoom = (Float) objects[4];
+
 				pin = mapController.createNewPin(
 						(LatLng) objects[0],  // point
 						(LatLngBounds) objects[1], // Boundaries
 						(String) objects[2], // name
-						(String) objects[3] // comment
+						(String) objects[3], // comment
+						_zoom //zoom
 				);
 			} catch (ExecutionException e) {
 				e.printStackTrace();
@@ -113,6 +121,7 @@ public class PinInfoActivity extends AppCompatActivity {
 			intent.putExtra("id", pin.getAutoId());
 			intent.putExtra("comment", pin.getComment());
 			intent.putExtra("isAdmin", getIntent().getExtras().getBoolean("isAdmin", false));
+			intent.putExtra("zoom", getIntent().getExtras().getFloat("zoom"));
 			startActivity(intent);
 			finish();
 		}
