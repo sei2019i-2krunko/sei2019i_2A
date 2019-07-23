@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					intent.putExtra("PointLong", point.longitude);
 
 					//send zoom
-					intent.putExtra("zoom",MapsActivity.this.googleMap.getCameraPosition().zoom);
+					intent.putExtra("zoom", MapsActivity.this.googleMap.getCameraPosition().zoom);
 
 					startActivity(intent);
 				}
