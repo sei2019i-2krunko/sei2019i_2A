@@ -86,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 				public void onMapLongClick(LatLng point) {
 					// save boundary
 					LatLngBounds value = MapsActivity.this.googleMap.getProjection().getVisibleRegion().latLngBounds;
+
 					Intent intent = new Intent(getBaseContext(), PinInfoActivity.class);
 
 					//send admin info
@@ -100,6 +101,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					//send point
 					intent.putExtra("PointLat", point.latitude);
 					intent.putExtra("PointLong", point.longitude);
+
+					//send zoom
+					intent.putExtra("zoom",MapsActivity.this.googleMap.getCameraPosition().zoom);
 
 					startActivity(intent);
 				}
