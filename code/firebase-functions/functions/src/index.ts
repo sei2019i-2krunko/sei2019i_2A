@@ -54,7 +54,23 @@ exports.delete_user_document = functions.auth.user().onDelete((user, context) =>
 
 		console.log('[Delete user document] Deleting document', u_doc)
 
-		return docRef.delete().catch(error => {
+		return docRef.delete().then((value) => {
+			console.log('[Delete user document] Value returned: ' + value)
+			return db.collection(u_doc + '/pins/').listDocuments().then((docs) => {
+				const promises = []
+				docs.forEach(doc => {
+					console.log(`[Delete user document] Document to be deleted ${doc.id}`)
+					promises.push(deleteDocumetPromisePath(doc, u_doc + '/pins/'))
+
+				})
+				return Promise.all(promises).then((_) => {
+					console.log('[Delete user document] Successful deletion.')
+				}).catch((error) => {
+					console.error(`[Delete user document] error: ${error}`)
+				})
+
+			})
+		}).catch(error => {
 			console.error(
 				'[Delete user document] There was a problem at trying to eliminate the document',
 				u_doc,
@@ -286,6 +302,13 @@ function deleteDocumetPromise(document: DocumentReference) {
 	console.log(`[deleteDocumetPromise] Path /global-pins/${document.id}`)
 
 	return db.collection('/global-pins').doc(document.id).delete();
+}
+
+function deleteDocumetPromisePath(document: DocumentReference, path: string) {
+	console.log(`[deleteDocumetPromisePath] Document id ${document.id}`)
+	console.log(`[deleteDocumetPromisePath] Path ${path}${document.id}`)
+
+	return db.collection(path).doc(document.id).delete()
 }
 
 // this function deletes documents in global-pins when a new is created
