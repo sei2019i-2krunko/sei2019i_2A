@@ -87,6 +87,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 	const NEBoundLongitude: number = data.NEBoundLongitude || null
 	const SWBoundLatitude: GeoPoint = data.SWBoundLatitude || null
 	const SWBoundLongitude: GeoPoint = data.SWBoundLongitude || null
+	const zoom: number = data.zoom || null
 
 	// if it is a valid user
 	if (context.auth) {
@@ -180,7 +181,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 					const collection_path = `/global-pins/`
 					collection_ref = db.collection(collection_path)
 
-					if (NEBoundLatitude && NEBoundLongitude && SWBoundLatitude && SWBoundLongitude) {
+					if (NEBoundLatitude && NEBoundLongitude && SWBoundLatitude && SWBoundLongitude && zoom) {
 						if (latitude && longitude) {
 
 							// if point was not given
@@ -199,15 +200,15 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 							//if name was given we attach it
 							if (name) {
 								if (comment) {
-									doc_info = { owner, name, comment, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
+									doc_info = { owner, name, comment, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now(), zoom }
 								} else {
-									doc_info = { owner, name: name, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
+									doc_info = { owner, name: name, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now(), zoom }
 								}
 							} else {
 								if (comment) {
-									doc_info = { owner, comment: comment, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
+									doc_info = { owner, comment: comment, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now(), zoom }
 								} else {
-									doc_info = { owner, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now() }
+									doc_info = { owner, point, NEBound, SWBound, createdAt: admin.firestore.Timestamp.now(), zoom }
 								}
 							}
 
@@ -216,6 +217,7 @@ exports.save_new_pin = functions.https.onCall((data, context) => {
 							console.error('[Save new pin] point:', point)
 							console.error('[Save new pin] latitude:', latitude)
 							console.error('[Save new pin] longitude:', longitude)
+							console.error('[Save new pin] zoom:', zoom)
 
 							throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
 								'one arguments "point" containing the GeoPoint or arguments "latitude" and "longitude"')
