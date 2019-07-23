@@ -21,13 +21,15 @@
     <string name="goToMaps">Go to maps</string>
     <string name="google">Login with Google</string>
     <string name="sign_in">Login</string>
-    <string name="ir_a_registro">Haven\'t an account yet? Create one</string>
+    <string name="ir_a_registro">No account? Create one</string>
     <string name="name">Name</string>
     <string name="get_back_login">Do you already have an account? Enter here</string>
     <string name="sign_out">Logout</string>
     <string name="successfulLogin">Login succesfully</string>
     <string name="verify_password">Verify that you password is the same</string>
     <string name="ANONYMOUS_ERROR">Error while signing in as anonymous</string>
+    <string name="comment">Comment</string>
+    <string name="submit">Submit</string>
 
 
 </resources>

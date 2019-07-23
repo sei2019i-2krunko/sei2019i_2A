@@ -21,4 +21,6 @@
     <string name="verify_password">Verifica que tu contraseña sea la misma</string>
     <string name="welcome_main_activity">Bienvenido</string>
     <string name="ANONYMOUS_ERROR">Error al ingresar como anonimo</string>
+    <string name="comment">Comentario</string>
+    <string name="submit">Enviar</string>
 </resources>

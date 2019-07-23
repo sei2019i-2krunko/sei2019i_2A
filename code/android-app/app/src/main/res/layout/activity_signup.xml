@@ -95,9 +95,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:onClick="@string/crear_cuenta"
             android:padding="12dp"
-            android:text="Crear cuenta" />
+            android:text="@string/create_account" />
 
         <TextView
             android:id="@+id/link_login"

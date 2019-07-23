@@ -81,7 +81,7 @@ public class PinInfoActivity extends AppCompatActivity {
 
 		// Inicialización de Botones y Campos de Texto (desde Layout)
 		_name = findViewById(R.id.editText);
-		_comment = findViewById(R.id.commentn);
+		_comment = findViewById(R.id.comment);
 		_entry = findViewById(R.id._entry);
 	}
 
