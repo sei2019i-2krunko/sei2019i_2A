@@ -18,4 +18,3 @@
 > * :star: [Docs - 4 / Sequence](https://github.com/sei2019i-2krunko/sei2019i_2A/tree/master/docs/sequence)
 > * :star: [Docs - 5 / Classes](https://github.com/sei2019i-2krunko/sei2019i_2A/tree/master/docs/classes)
 
-
