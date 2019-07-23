@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -20,6 +21,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -73,6 +77,22 @@ public class UserRepository {
 
 	public static User getCurrentUser() {
 		return User.fromFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
+	}
+
+	public static Boolean isAdminFirestore(@NonNull String uid) throws ExecutionException, InterruptedException {
+		DocumentReference user_doc = FirebaseFirestore.getInstance().document("/users/" + uid);
+		return (Boolean) await(user_doc.get().continueWith(new Continuation<DocumentSnapshot, Object>() {
+			@Override
+			public Object then(@NonNull Task<DocumentSnapshot> task) throws Exception {
+				DocumentSnapshot result = task.getResult();
+				if (result != null) {
+					Log.d("UserRepository", "Info from firebase was got.");
+					return result.get("admin");
+				}
+				Log.e("UserRepository", "Info from firebase could not be got.");
+				return null;
+			}
+		}));
 	}
 
 	public User getGoogleUser(Task<GoogleSignInAccount> completedTask) {

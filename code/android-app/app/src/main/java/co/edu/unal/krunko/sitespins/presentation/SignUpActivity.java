@@ -44,6 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				// Finalización del Activity de Sign-Up y regreso al Activity de Login
 				Intent backLogin = new Intent(getApplicationContext(), LoginActivity.class);
+				backLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(backLogin);
 				finish();
 				overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -89,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
 	}
 
 	@SuppressLint("StaticFieldLeak")
-	class RegisterEmailPasswordTask extends AsyncTask<Object, Void, RegisterController.RegisterStatus> {
+	private class RegisterEmailPasswordTask extends AsyncTask<Object, Void, RegisterController.RegisterStatus> {
 
 		@Override
 		protected synchronized RegisterController.RegisterStatus doInBackground(Object... objects) {
