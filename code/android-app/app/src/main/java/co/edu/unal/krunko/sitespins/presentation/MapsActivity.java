@@ -60,7 +60,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 			//pone todos los markers
 			mapController.showPins(this.googleMap, this.isAdmin);
-			mapController.otherPines(this.googleMap);
 			Bundle extras = getIntent().getExtras();
 
 

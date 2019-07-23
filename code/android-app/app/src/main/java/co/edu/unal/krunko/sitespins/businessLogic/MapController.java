@@ -31,39 +31,11 @@ public class MapController {
 	}
 
 	public void showPins(final GoogleMap googleMap, boolean isAdmin) {
-		// TODO: 22/07/19 implement for admin and non-admin users
-		/*mMap.createNewPin(new MarkerOptions().position(markerOfTheDay).title("Marker of the day"));
-		mMap;*/
 
 		new ShowGlobalPinTask().execute(this.pinRepository, googleMap, isAdmin);
 		if (!isAdmin) {
-			// TODO: 22/07/19  Non-admin:
-			//  get global pin and then lock the map scrolling
 			new ShowPinsTask().execute(this.pinRepository, googleMap);
-
-		} else {
-			// TODO: 22/07/19  Admin:
-			//  get global pin without lock the map scrolling
-			// new ShowGlobalPinTask().execute(this.pinRepository, googleMap, true);
 		}
-	}
-
-	public LatLngBounds markerOfTheDayBounds() {
-
-		/*//TODO:
-		//link en los repositorios como es
-		return globalPointsRepository.getBounds();*/
-		return null;
-	}
-
-	public void otherPines(GoogleMap googleMap) {
-		//TODO:
-		/*//link en los repositorios como es
-		pins[] pines = userRepository.getallPins;
-		for (int i = 0; i < pins.lenght; i++) {
-			showPinInMaps(pins.geopoint, pins.name, pins.comment, googleMap);
-		}*/
-
 	}
 
 	public Pin createNewPin(LatLng point, LatLngBounds bounds, String title, String message) throws ExecutionException, InterruptedException {
@@ -77,22 +49,21 @@ public class MapController {
 
 	public void showPinInMaps(PinUser pin, GoogleMap map) {
 
-			MarkerOptions options = new MarkerOptions()
-					.position(PinRepository.toLatLong(pin.getPoint()))
-					.title(pin.getName())
-					.snippet(pin.getComment())
-					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-
-			map.addMarker(options);
-
-	}
-
-	void showPinInMaps(PinAdmin pin, GoogleMap map){
-		map.addMarker(new MarkerOptions()
+		MarkerOptions options = new MarkerOptions()
 				.position(PinRepository.toLatLong(pin.getPoint()))
 				.title(pin.getName())
 				.snippet(pin.getComment())
-				.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+				.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+		map.addMarker(options);
+
+	}
+
+	void showPinInMaps(PinAdmin pin, GoogleMap map) {
+		map.addMarker(new MarkerOptions()
+				.position(PinRepository.toLatLong(pin.getPoint()))
+				.title(pin.getName())
+				.snippet(pin.getComment()));
 	}
 
 
@@ -137,7 +108,7 @@ public class MapController {
 
 			try {
 
-				List<PinAdmin> pinsAdmin =  repository.getGlobalPin();
+				List<PinAdmin> pinsAdmin = repository.getGlobalPin();
 				ret.add(pinsAdmin);
 
 				GoogleMap googleMap = (GoogleMap) objects[1]; //Google Map
@@ -158,14 +129,14 @@ public class MapController {
 		protected void onPostExecute(List<Object> objects) {
 
 			List<PinAdmin> pinsAdmin = (List<PinAdmin>) objects.get(0);
-			Log.d(TAG, "PinsAdmin: "+pinsAdmin.toString());
+			Log.d(TAG, "PinsAdmin: " + pinsAdmin.toString());
 			PinAdmin pinAdmin = pinsAdmin.get(0);
-			Log.d(TAG, "pinAdmin"+pinAdmin.toString());
+			Log.d(TAG, "pinAdmin" + pinAdmin.toString());
 
 			GoogleMap googleMap = (GoogleMap) objects.get(1);
 			Boolean admin = (Boolean) objects.get(2);
 
-			Log.d(TAG, "[Pin's Admin] "+pinAdmin.toString());
+			Log.d(TAG, "[Pin's Admin] " + pinAdmin.toString());
 
 			showPinInMaps(pinAdmin, googleMap);
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(PinRepository.toLatLong(pinAdmin.getPoint())));
@@ -179,10 +150,6 @@ public class MapController {
 						)
 				);
 			}
-
-			/*
-			LatLngBounds ne = mapController.markerOfTheDayBounds();
-			this.googleMap.setLatLngBoundsForCameraTarget(ne);*/
 		}
 	}
 
