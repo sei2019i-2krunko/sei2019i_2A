@@ -66,8 +66,8 @@ public class LoginController {
 			Toast.makeText(this.activity, "Authentication success.",
 					Toast.LENGTH_SHORT).show();
 		} else {
-			Toast.makeText(this.activity, "Authentication failed.",
-					Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this.activity, "Authentication failed.",
+					//Toast.LENGTH_SHORT).show();
 		}
 	}
 

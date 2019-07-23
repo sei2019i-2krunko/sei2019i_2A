@@ -113,7 +113,7 @@ public class UserRepository {
 					public void onComplete(@NonNull Task<AuthResult> task) {
 						if (task.isSuccessful()) {
 							Log.d("Login_Success", "signInWithCredential:success");
-							user = User.fromFirebaseUser(auth.getCurrentUser());
+							user = getUser();
 							LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
 						} else {
 							Log.w("Login_Fail", "signInWithCredential:failure", task.getException());
