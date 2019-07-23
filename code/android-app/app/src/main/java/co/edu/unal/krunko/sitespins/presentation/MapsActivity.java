@@ -106,6 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 					intent.putExtra("zoom", MapsActivity.this.googleMap.getCameraPosition().zoom);
 
 					startActivity(intent);
+					finish();
 				}
 			});
 		} catch (NullPointerException n) {
