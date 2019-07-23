@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.login.Login;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,11 +36,13 @@ public class LoginController {
 		 * SUCCESSFUL_LOGIN: the user logging in was successful.
 		 * EMAIL_IS_REQUIRED_OR_INVALID: if the user has enter an invalid email.
 		 * PASSWORD_IS_REQUIRED: if the password has a length lower than 8 characters.
+		 * ANONYMOUS_FAILED: if the password has a length lower than 8 characters.
 		 */
 		WRONG_CREDENTIALS,
 		SUCCESSFUL_LOGIN,
 		EMAIL_IS_REQUIRED_OR_INVALID,
-		PASSWORD_IS_REQUIRED
+		PASSWORD_IS_REQUIRED,
+		ANONYMOUS_FAILED
 	}
 
 	public LoginStatus loginWithEmailAndPassword(String email, String password) throws ExecutionException, InterruptedException {
@@ -86,6 +89,14 @@ public class LoginController {
 		if( new UserRepository(this.activity).getGoogleUser(task) != null){
 			// Access success
 		}
+	}
+
+	public LoginStatus handleAnonymous() throws ExecutionException, InterruptedException {
+		UserRepository userRepository = new UserRepository(this.activity);
+		if(userRepository.anonymousLogin() != null){
+			return LoginStatus.SUCCESSFUL_LOGIN;
+		}
+		return LoginStatus.ANONYMOUS_FAILED;
 	}
 
 }

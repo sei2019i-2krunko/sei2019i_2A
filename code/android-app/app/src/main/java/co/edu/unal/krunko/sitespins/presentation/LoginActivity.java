@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
 		_anonymousButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				goToMapsActivity();
+				anonymous();
 			}
 		});
 
@@ -144,6 +144,10 @@ public class LoginActivity extends AppCompatActivity {
 		if (requestCode == RC_SIGN_IN) {
 			new LoginController(this).handleGoogleSignInResult(data);
 		}
+	}
+
+	private void anonymous(){
+		new AnonymousAuth().execute(this);
 	}
 
 	private void login(final String email, final String password) {
@@ -223,4 +227,53 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		}
 	}
+
+	@SuppressLint("StaticFieldLeak")
+	private class AnonymousAuth extends AsyncTask<Object, Void, LoginController.LoginStatus> {
+
+		@Override
+		protected synchronized LoginController.LoginStatus doInBackground(Object... objects) {
+
+			LoginController.LoginStatus loginStatus = null;
+			try {
+				loginStatus = new LoginController((Activity) objects[0]).handleAnonymous();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			return loginStatus != null ? loginStatus : LoginController.LoginStatus.WRONG_CREDENTIALS;
+		}
+
+
+		protected void onPostExecute(LoginController.LoginStatus loginStatus) {
+			switch (loginStatus) {
+				case WRONG_CREDENTIALS:
+					_emailText.setError(getResources().getString(R.string.WRONG_CREDENTIALS));
+					_passwordText.setError(getResources().getString(R.string.WRONG_CREDENTIALS));
+					break;
+
+				case SUCCESSFUL_LOGIN:
+					goToMainActivity();
+					break;
+
+				case EMAIL_IS_REQUIRED_OR_INVALID:
+					_emailText.setError(getResources().getString(R.string.EMAIL_ERROR));
+					break;
+
+				case PASSWORD_IS_REQUIRED:
+					_passwordText.setError(getResources().getString(R.string.PASSWORD_ERROR));
+					break;
+
+				case ANONYMOUS_FAILED:
+					_emailText.setError(getResources().getString(R.string.ANONYMOUS_ERROR));
+					break;
+
+				default:
+					break;
+			}
+		}
+	}
+
 }

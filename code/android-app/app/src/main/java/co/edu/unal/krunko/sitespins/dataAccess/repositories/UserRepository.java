@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 import co.edu.unal.krunko.sitespins.dataAccess.models.User;
 
@@ -165,6 +166,25 @@ public class UserRepository {
 		}));
 
 		return this.getUser();
+	}
+
+	public User anonymousLogin() throws ExecutionException, InterruptedException{
+		await(this.auth.signInAnonymously()
+				.addOnCompleteListener(this.activity, new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						if (task.isSuccessful()) {
+							// Sign in success, update UI with the signed-in user's information
+							Log.d("Anonymous login success", "signInAnonymously:success");
+							user = getUser();
+						} else {
+							// If sign in fails, display a message to the user.
+							Log.w("Anonymous login failed", "signInAnonymously:failure", task.getException());
+							user = null;
+						}
+					}
+				}));
+		return user;
 	}
 
 	public User getUserByEmailAndPassword(String email, String password) throws ExecutionException, InterruptedException {

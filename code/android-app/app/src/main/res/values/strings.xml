@@ -17,6 +17,7 @@
 
     <string name="EMAIL_ERROR">Ingrese e-mail válido</string>
     <string name="PASSWORD_ERROR">Ingrese contraseña mayor a ocho(8) caracteres</string>
+    <string name="ANONYMOUS_ERROR">Error al ingresar como anonimo</string>
     <string name="successfulLogin">Login exitoso</string>
     <string name="WRONG_CREDENTIALS">Tu correo o contraseña es incorrecta</string>
     <string name="verify_password">Verifica que tu contraseña sea la misma</string>
