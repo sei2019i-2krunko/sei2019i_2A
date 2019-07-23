@@ -463,10 +463,12 @@ public class PinRepository {
 	 * @throws InterruptedException If the task is interrupted.
 	 */
 	@SuppressWarnings("JavadocReference")
-	public PinAdmin getGlobalPin() throws ExecutionException, InterruptedException {
+	public List<PinAdmin> getGlobalPin() throws ExecutionException, InterruptedException {
 		CollectionReference global_pins = this.firestore.collection("/global-pins/");
 
-		final PinAdmin[] global_pin = {null};
+		final List<PinAdmin> pinAdmins = new ArrayList<>();
+
+		Log.d(TAG, "--------------Before getting global pins--------------");
 
 		await(global_pins.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 			@Override
@@ -521,7 +523,8 @@ public class PinRepository {
 							Log.d(TAG, "Pin's North-East Boundary: " + NEBound.toString());
 							Log.d(TAG, "Pin's South-West Boundary: " + SWBound.toString());
 
-							global_pin[0] = new PinAdmin(owner, name, id, comment, point, NEBound, SWBound);
+							pinAdmins.add(0, new PinAdmin(owner, name, id, comment, point, NEBound, SWBound));
+							Log.d(TAG, "PinAdmin: " + pinAdmins.get(0).toString());
 						}
 
 						Log.d(TAG, "---------------------------");
@@ -532,7 +535,7 @@ public class PinRepository {
 			}
 		}));
 
-		return global_pin[0];
+		return pinAdmins;
 	}
 
 	public static GeoPoint toGeoPoint(LatLng point) {

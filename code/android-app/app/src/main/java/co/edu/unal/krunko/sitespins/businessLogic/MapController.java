@@ -2,7 +2,9 @@ package co.edu.unal.krunko.sitespins.businessLogic;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import co.edu.unal.krunko.sitespins.dataAccess.models.Pin;
+import co.edu.unal.krunko.sitespins.dataAccess.models.PinAdmin;
 import co.edu.unal.krunko.sitespins.dataAccess.models.PinUser;
 import co.edu.unal.krunko.sitespins.dataAccess.repositories.PinRepository;
 
@@ -30,7 +33,9 @@ public class MapController {
 	public void showPins(final GoogleMap googleMap, boolean isAdmin) {
 		// TODO: 22/07/19 implement for admin and non-admin users
 		/*mMap.createNewPin(new MarkerOptions().position(markerOfTheDay).title("Marker of the day"));
-		mMap.moveCamera(CameraUpdateFactory.newLatLng(markerOfTheDay));*/
+		mMap;*/
+
+		new ShowGlobalPinTask().execute(this.pinRepository, googleMap, isAdmin);
 		if (!isAdmin) {
 			// TODO: 22/07/19  Non-admin:
 			//  get global pin and then lock the map scrolling
@@ -39,6 +44,7 @@ public class MapController {
 		} else {
 			// TODO: 22/07/19  Admin:
 			//  get global pin without lock the map scrolling
+			// new ShowGlobalPinTask().execute(this.pinRepository, googleMap, true);
 		}
 	}
 
@@ -71,13 +77,22 @@ public class MapController {
 
 	public void showPinInMaps(PinUser pin, GoogleMap map) {
 
-		MarkerOptions options = new MarkerOptions()
+			MarkerOptions options = new MarkerOptions()
+					.position(PinRepository.toLatLong(pin.getPoint()))
+					.title(pin.getName())
+					.snippet(pin.getComment())
+					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+
+			map.addMarker(options);
+
+	}
+
+	void showPinInMaps(PinAdmin pin, GoogleMap map){
+		map.addMarker(new MarkerOptions()
 				.position(PinRepository.toLatLong(pin.getPoint()))
 				.title(pin.getName())
 				.snippet(pin.getComment())
-				.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-
-		map.addMarker(options);
+				.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
 	}
 
 
@@ -88,7 +103,7 @@ public class MapController {
 		protected synchronized List<Object> doInBackground(Object... objects) {
 			List<Object> pins = new ArrayList<>(2);
 			try {
-				PinRepository repository = (PinRepository)objects[0];
+				PinRepository repository = (PinRepository) objects[0];
 				pins.add(repository.getPins());//List<PinUser>
 				pins.add(objects[1]); //GoogleMap
 			} catch (ExecutionException e) {
@@ -107,6 +122,67 @@ public class MapController {
 			for (int i = 0; i < pins.size(); i++) {
 				showPinInMaps(pins.get(i), googleMap);
 			}
+		}
+	}
+
+	@SuppressLint("StaticFieldLeak")
+	private class ShowGlobalPinTask extends AsyncTask<Object, Void, List<Object>> {
+
+		String TAG = "ShowGlobalPinTask";
+
+		@Override
+		protected synchronized List<Object> doInBackground(Object... objects) {
+			PinRepository repository = (PinRepository) objects[0]; //pin's repository
+			List<Object> ret = new ArrayList<>(3);
+
+			try {
+
+				List<PinAdmin> pinsAdmin =  repository.getGlobalPin();
+				ret.add(pinsAdmin);
+
+				GoogleMap googleMap = (GoogleMap) objects[1]; //Google Map
+				Boolean admin = (Boolean) objects[2]; //admin
+
+				ret.add(googleMap);
+				ret.add(admin);
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			return ret;
+		}
+
+		@Override
+		protected void onPostExecute(List<Object> objects) {
+
+			List<PinAdmin> pinsAdmin = (List<PinAdmin>) objects.get(0);
+			Log.d(TAG, "PinsAdmin: "+pinsAdmin.toString());
+			PinAdmin pinAdmin = pinsAdmin.get(0);
+			Log.d(TAG, "pinAdmin"+pinAdmin.toString());
+
+			GoogleMap googleMap = (GoogleMap) objects.get(1);
+			Boolean admin = (Boolean) objects.get(2);
+
+			Log.d(TAG, "[Pin's Admin] "+pinAdmin.toString());
+
+			showPinInMaps(pinAdmin, googleMap);
+			googleMap.moveCamera(CameraUpdateFactory.newLatLng(PinRepository.toLatLong(pinAdmin.getPoint())));
+
+			//if a non-admin user has called the task
+			if (!admin) {
+				googleMap.setLatLngBoundsForCameraTarget(
+						new LatLngBounds(
+								PinRepository.toLatLong(pinAdmin.getSWBound()),
+								PinRepository.toLatLong(pinAdmin.getNEBound())
+						)
+				);
+			}
+
+			/*
+			LatLngBounds ne = mapController.markerOfTheDayBounds();
+			this.googleMap.setLatLngBoundsForCameraTarget(ne);*/
 		}
 	}
 

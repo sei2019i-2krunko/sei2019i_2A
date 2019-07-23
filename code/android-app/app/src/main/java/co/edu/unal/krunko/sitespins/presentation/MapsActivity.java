@@ -63,9 +63,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 			mapController.otherPines(this.googleMap);
 			Bundle extras = getIntent().getExtras();
 
-			LatLngBounds ne = mapController.markerOfTheDayBounds();
-			this.googleMap.setLatLngBoundsForCameraTarget(ne);
-
 
 			// if we receive a pin from another activity
 			if (extras != null && !isAdmin) {

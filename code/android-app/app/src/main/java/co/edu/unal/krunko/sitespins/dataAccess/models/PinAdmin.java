@@ -39,4 +39,16 @@ public class PinAdmin extends Pin {
 	public void setSWBound(GeoPoint SWBound) {
 		this.SWBound = SWBound;
 	}
+
+	public String toString() {
+		String string = "ID: " + this.getAutoId();
+		string += "\nOwner: " + this.getOwner();
+		string += "\nName: " + this.getName();
+		string += "\nComment: " + this.getComment();
+		string += "\nPoint: " + this.getPoint().toString();
+		string += "\nNEBound: " + this.getNEBound().toString();
+		string += "\nSWBound: " + this.getSWBound().toString();
+		string += "\n";
+		return string;
+	}
 }
