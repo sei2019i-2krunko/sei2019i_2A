@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="EMAIL_ERROR">Ingrese un e-mail válido</string>
+    <string name="PASSWORD_ERROR">Ingrese contraseña mayor a ocho(8) caracteres</string>
+    <string name="password">Contraseña</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="facebook">Ingresar con Facebook</string>
+    <string name="WRONG_CREDENTIALS">Tu correo o contraseña es incorrecta</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="anonymous">Ingresar como Anónimo</string>
+    <string name="goToMaps">Ir a mapas</string>
+    <string name="google">Ingresar con Google</string>
+    <string name="sign_in">Ingresar</string>
+    <string name="ir_a_registro">¿No tienes cuenta? Crea una</string>
+    <string name="loading_message">Cargando</string>
+    <string name="name">Nombre</string>
+    <string name="get_back_login">¿Ya tienes una cuenta? Ingresa aquí</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="successfulLogin">Ingreso exitoso</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="verify_password">Verifica que tu contraseña sea la misma</string>
+    <string name="welcome_main_activity">Bienvenido</string>
+    <string name="ANONYMOUS_ERROR">Error al ingresar como anonimo</string>
+</resources>
